@@ -13,7 +13,7 @@ class Author(models.Model):
         pRat = 0
         pRat += postRat.get('postRating')
 
-        commentRat = self.authorUser.coment_set.aggregate(commentRating=Sum('rating'))
+        commentRat = self.authorUser.comment_set.aggregate(commentRating=Sum('rating'))
         cRat = 0
         cRat += commentRat.get('commentRating')
 
@@ -23,7 +23,7 @@ class Author(models.Model):
 
 # Категории новостей/статей
 class Category(models.Model):
-    name = models.CharField(max_lenght=64, unique=True)
+    name = models.CharField(max_length=64, unique=True)
 
 
 # Статьи и новости, которые создают пользователи
@@ -42,10 +42,6 @@ class Post(models.Model):
     title = models.CharField(max_length=64)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
-
-    # isnews = models.BooleanField(default=False)
-
-    # created = models.DateTimeField(auto_now_add=True)
 
     def preview(self):
         return self.text[0:123] + '...'

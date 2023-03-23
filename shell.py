@@ -1,15 +1,11 @@
-from django.contrib.auth.models import User
-from web_news.news.models import Author
-from web_news.news.models import Category
-from web_news.news.models import Post
-from web_news.news.models import PostCategory
-from web_news.news.models import Comment
-from django.db.models import Sum
+# from django.contrib.auth.models import User
+from news_portal.news.models import *
+# from django.db.models import Sum
 
 u1 = User.objects.create_user('u1')
 u2 = User.objects.create_user('u2')
-a1 = Author.objects.create(user=u1)
-a2 = Author.objects.create(user=u2)
+a1 = Author.objects.create(authorUser=u1)
+a2 = Author.objects.create(authorUser=u2)
 
 c1 = Category.objects.create(name='c1')
 c2 = Category.objects.create(name='c2')
@@ -17,13 +13,20 @@ c3 = Category.objects.create(name='c3')
 c4 = Category.objects.create(name='c4')
 
 p1 = Post.objects.create(author=a2, title='Вредные советы 1',
-                         text='Все начинающие мастера пытаются красить краснокочанной капустой и после восторга обычно к ним приходит разочарование. Мастерство в любом деле приходит с опытом!')
+                         text='Все начинающие мастера пытаются красить краснокочанной капустой и после восторга '
+                              'обычно к ним приходит разочарование. Мастерство в любом деле приходит с опытом!')
 
 p2 = Post.objects.create(author=a2, title='Вредные советы 2',
-                         text='Представляете вы дарите свой шедевр близкому человеку или продаёте, а ваше изделие при первой стирке линяет! Не приятно, правда! Краснокочанная капуста, ежевика, черника, виноград и тд. содержат в себе краситель антоциан. Красители, которые подходят для кулинарных изделий, обычно для ткани не подходят!')
+                         text='Представляете вы дарите свой шедевр близкому человеку или продаёте, а ваше изделие при '
+                              'первой стирке линяет! Не приятно, правда! Краснокочанная капуста, ежевика, черника, '
+                              'виноград и тд. содержат в себе краситель антоциан. Красители, которые подходят для '
+                              'кулинарных изделий, обычно для ткани не подходят!')
 
-n1 = Post.objects.create(author=a1, isnews=True, title='Вредные советы 3',
-                         text='Да, да, растения свои удивительные цвета, танины и всё, что нужно для крашения, использует для себя! И поэтому перед тем, как вы задумаете окрашивать ткани, посмотрите в справочнике по растениям какими свойствами оно обладаето. Если присутствуют танины, органические кислоты, дубильные вещества — смело можете приступать к работе, но предварительно сделайте образец и всё хорошенько обдумайте.')
+n1 = Post.objects.create(author=a1, categoryType='AR', title='Вредные советы 3',
+                         text='Да, да, растения свои удивительные цвета, танины и всё, что нужно для крашения, '
+                              'использует для себя! И поэтому перед тем, как вы задумаете окрашивать ткани. Если '
+                              'присутствуют танины, органические кислоты, дубильные вещества — смело можете '
+                              'приступать к работе, но предварительно сделайте образец и всё хорошенько обдумайте.')
 
 pc1 = PostCategory.objects.create(post=p1, category=c1)
 pc2 = PostCategory.objects.create(post=p1, category=c2)
@@ -39,13 +42,14 @@ co2 = Comment.objects.create(user=u2, post=p2, text='открытий чудны
 co3 = Comment.objects.create(user=u1, post=n1, text='готовит просвещенья дух')
 co4 = Comment.objects.create(user=u2, post=p1, text='и опыт сын ошибок трудных и гений парадоксов друг')
 
-c1.like()
+co1.like()
 p1.dislike()
 p2.like()
-p3.like()
-c2.dislike()
-c3.like()
-c4.like()
+p1.like()
+n1.like()
+co2.dislike()
+co3.like()
+co4.like()
 
 a1.update_rating()
 a2.update_rating()
