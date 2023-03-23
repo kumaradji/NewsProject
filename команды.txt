@@ -1,0 +1,14 @@
+# Создаём новый проект с вертуальным окружением
+python -m venv venv
+source venv/bin/activate
+pip install django
+django-admin startproject news_portal
+
+cd news_portal
+python manage.py runserver
+
+cd news_portal # переходим через открыть через терминал
+python3 manage.py startapp news
+
+settings.py -> NSTALLED_APP -> add'news'
+
