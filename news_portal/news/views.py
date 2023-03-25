@@ -1,3 +1,18 @@
-from django.shortcuts import render
+# Импортируем класс, который говорит нам о том,
+# что в этом представлении мы будем выводить список объектов из БД
+from django.views.generic import ListView, DetailView
+from .models import *
 
-# Create your views here.
+
+class PostList(ListView):
+    model = Post
+    ordering = 'title'
+    template_name = 'news.html'
+    context_object_name = 'news'
+
+
+class PostDetail(DetailView):
+    # Модель всё та же, но мы хотим получать информацию по отдельной новости
+    model = Post
+    template_name = 'post.html'
+    context_object_name = 'post'
