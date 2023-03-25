@@ -46,7 +46,7 @@ a2.update_rating()
 
 
 ###########
-a = Author.objects.order_by('rating')[0]
+a = Author.objects.order_by('-rating')[0]
 print(f'Автор: {a.user.username}, рейтинг: {a.rating}')
 
 p = Post.objects.filter().order_by('-rating')[0]
