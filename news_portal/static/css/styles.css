@@ -329,6 +329,10 @@ th {
   border-width: 0;
 }
 
+tr.title {
+  background-color: lightgray;
+}
+
 label {
   display: inline-block;
 }

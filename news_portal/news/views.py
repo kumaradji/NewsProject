@@ -1,5 +1,5 @@
-# Импортируем класс, который говорит нам о том,
-# что в этом представлении мы будем выводить список объектов из БД
+from datetime import datetime
+
 from django.views.generic import ListView, DetailView
 from .models import *
 
@@ -7,14 +7,18 @@ from .models import *
 class PostList(ListView):
     model = Post
     ordering = 'title'
-    template_name = 'database/news.html'
+    template_name = 'news.html'
     context_object_name = 'news'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['time_now'] = datetime.utcnow()
+        context['next_sale'] = "Следите за новостями!"
+        return context
 
 
 class PostDetail(DetailView):
-    # Модель всё та же, но мы хотим получать информацию по отдельной новости
     model = Post
-    template_name = 'database/post.html'
+    template_name = 'post.html'
     context_object_name = 'post'
-
 
