@@ -1,5 +1,5 @@
+# Список команд для shell
 
-python3 manage.py shell
 from news.models import *
 
 u1 = User.objects.create_user('u1')
@@ -41,20 +41,18 @@ co2.dislike()
 co3.like()
 co4.like()
 
+a1 = Author.objects.get(pk=1)
+a2 = Author.objects.get(pk=2)
+
 a1.update_rating()
 a2.update_rating()
 
-
-###########
-a = Author.objects.order_by('-rating')[0]
-print(f'Автор: {a.user.username}, рейтинг: {a.rating}')
+a = Author.objects.order_by('ratingAuthor')[0]
+print(f'Автор: {a.authorUser}, рейтинг: {a.ratingAuthor}')
 
 p = Post.objects.filter().order_by('-rating')[0]
 
-print(
-    f'Дата: {p.created}, Автор: {p.author.user.username}, Рейтинг: {p.rating}, Заголовок: {p.title}, Превью: {p.preview()}')
+print(f'Дата: {p.dateCreation}, Автор: {p.author.authorUser}, Рейтинг: {p.rating}, Заголовок: {p.title}, Превью: {p.preview()}')
 
 for c in Comment.objects.filter(post_id=p.id):
-    print(f'Дата: {c.created}, Автор: {c.user.username}, Рейтинг: {c.rating}, Текст: {c.text}\r\n')
-
-Author.objects.get(id=1)
+    print(f'Дата: {c.created}, Автор: {c.user}, Рейтинг: {c.rating}, Текст: {c.text}\r\n')
