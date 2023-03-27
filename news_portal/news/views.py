@@ -7,12 +7,14 @@ from .models import *
 class PostList(ListView):
     model = Post
     ordering = 'title'
-    template_name = 'news.html'
+    template_name = 'database/news.html'
     context_object_name = 'news'
 
 
 class PostDetail(DetailView):
     # Модель всё та же, но мы хотим получать информацию по отдельной новости
     model = Post
-    template_name = 'post.html'
+    template_name = 'database/post.html'
     context_object_name = 'post'
+
+
