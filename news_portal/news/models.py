@@ -55,7 +55,7 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.text[0:123] + "..."}'
+        return f'{self.text}'
 
 
 class PostCategory(models.Model):
@@ -77,3 +77,6 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+    def __str__(self):
+        return f'{self.rating}: {self.text}'
