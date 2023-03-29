@@ -8,6 +8,10 @@ class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
     ratingAuthor = models.IntegerField(default=0)
 
+    class Meta:
+        verbose_name = 'Автор'
+        verbose_name_plural = 'Авторы'
+
     def update_rating(self):
         postRat = self.post_set.aggregate(postRating=Sum('rating'))
         pRat = 0
@@ -20,10 +24,20 @@ class Author(models.Model):
         self.ratingAuthor = pRat * 3 + cRat
         self.save()
 
+    def __str__(self):
+        return self.authorUser.name
+
 
 # Категории новостей/статей
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name
 
 
 # Статьи и новости, которые создают пользователи
@@ -37,11 +51,16 @@ class Post(models.Model):
     )
 
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
+    isnews = models.BooleanField(default=False)
     dateCreation = models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=64)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
 
     def preview(self):
         return self.text[0:123] + '...'
@@ -55,12 +74,19 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.text}'
+        return self.title
 
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Категория новости'
+        verbose_name_plural = 'Категории новостей'
+
+    def __str__(self):
+        return f'{self.post} ({self.category})'
 
 
 class Comment(models.Model):
@@ -69,6 +95,10 @@ class Comment(models.Model):
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
     def like(self):
         self.rating += 1
@@ -79,4 +109,4 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.rating}: {self.text}'
+        return f'{self.user.name} про "{self.post}"'
