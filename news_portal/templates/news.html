@@ -5,23 +5,49 @@ News
 {% endblock title %}
 
 {% block content %}
-   <h1>Все новости</h1>
-   <hr>
-   <h3>{{ time_now|date:'M d Y' }}</h3>
-<!--   &lt;!&ndash; Если в переменной next_sale будет None,-->
-<!--   то выведется указанный в фильтре текст &ndash;&gt;-->
-<!--   <h3> {{ next_news|default_if_none:"Чуть позже сообщим о новостях!" }} </h3>&ndash;&gt;-->
+<h1>Все новости</h1>
+<!--   <hr>-->
+<!--   <h3>{{ time_now|date:'M d Y' }}</h3>-->
+<!--&lt;!&ndash;   &lt;!&ndash; Если в переменной next_sale будет None,&ndash;&gt;-->
+<!--&lt;!&ndash;   то выведется указанный в фильтре текст &ndash;&gt;&ndash;&gt;-->
+<!--   <h3>{{ next_news|default_if_none:"Чуть позже сообщим о новостях!" }}</h3>-->
 
-   {% if news %}
-      <table>
-         <tr>
-            <td>Тип</td>
-            <td>Название</td>
-            <td>Категория</td>
-            <td>Пост</td>
-         </tr>
-      </table>
-   {% else %}
-      <h2>Новостей нет!</h2>
-   {% endif %}
+<!--   {% if news %}-->
+<!--      <table>-->
+<!--         <tr>-->
+<!--            <td>Тип</td>-->
+<!--            <td>Название</td>-->
+<!--            <td>Категория</td>-->
+<!--            <td>Пост</td>-->
+<!--         </tr>-->
+
+<!--         {% for new in Post %}-->
+<!--            <tr>-->
+<!--               <td>{{ Post.text }}</td>-->
+<!--               <td>{{ Post.title|truncatewords:2 }}</td>-->
+<!--               <td>{{ Post.postCategory }}</td>-->
+<!--               <td>{{ Post.rating }}</td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
+
+<!--      </table>-->
+<table>
+    <tbody>
+    <tr class=title>
+        <td>Заголовок</td>
+        <td>Дата</td>
+        <td>Предпросмотр</td>
+    </tr>
+    {% for p in posts %}
+    <tr>
+        <td><a href="{{p.id}}">{{p.title|censor}}</a></td>
+        <td>{{p.dateCreation|date:'d.m.Y'}}</td>
+        <td>{{p.preview|censor}}</td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+{% else %}
+<h2>Новостей нет!</h2>
+{% endif %}
 {% endblock content %}
