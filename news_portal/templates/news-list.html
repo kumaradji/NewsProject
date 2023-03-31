@@ -1,0 +1,30 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+<h1>Все новости здесь</h1>
+<hr>
+{% if news %}
+<table>
+    <tr class=title>
+        <td>Заголовок</td>
+        <td>Дата</td>
+        <td>Предпросмотр</td>
+<!--td-->
+<!--    </tr>-->
+
+<!--    {% for с in posts %}-->
+<!--    <tr>-->
+<!--        <td>{{c.title}}</td>-->
+<!--        <td>{{c.dateCreation}}</td>-->
+<!--        <td>{{c.text}}</td>-->
+<!--    </tr>-->
+<!--    {%endfor%}-->
+</table>
+{% else %}
+<h2>Новостей больше нет!</h2>
+{% endif %}
+{% endblock content %}

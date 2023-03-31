@@ -20,3 +20,67 @@ python3 manage.py migrate
 
 python3 manage.py shell
 from news.models import *
+
+git branch
+
+
+
+# Список команд для shell
+
+from news.models import *
+
+u1 = User.objects.create_user('Громов')
+u2 = User.objects.create_user('Солнцев')
+a1 = Author.objects.create(authorUser=u1)
+a2 = Author.objects.create(authorUser=u2)
+
+c1 = Category.objects.create(name='Спорт')
+c2 = Category.objects.create(name='Политика')
+c3 = Category.objects.create(name='Искусство')
+c4 = Category.objects.create(name='Экономика')
+
+p1 = Post.objects.create(author=a2, categoryType='AR', title='Новости хлеборобов', text='Мастерство в любом деле приходит с опытом!')
+
+p2 = Post.objects.create(author=a2, categoryType='AR', title='В разгаре страда', text='Комбайны выходят на поля. Скоро хлеб отправиться в закрома родины')
+
+n1 = Post.objects.create(author=a1, categoryType='NW', title='На полях страны', text='Молодые колхозники осваивают новую технику')
+
+pc1 = PostCategory.objects.create(post=p1, category=c1)
+pc2 = PostCategory.objects.create(post=p1, category=c2)
+
+pc3 = PostCategory.objects.create(post=p2, category=c2)
+pc4 = PostCategory.objects.create(post=p2, category=c4)
+
+pc5 = PostCategory.objects.create(post=n1, category=c2)
+pc6 = PostCategory.objects.create(post=n1, category=c3)
+
+co1 = Comment.objects.create(user=u1, post=p1, text='о сколько нам открытий чудных')
+co2 = Comment.objects.create(user=u2, post=p2, text='готовит просвещенья дух')
+co3 = Comment.objects.create(user=u1, post=n1, text='и опыт сын ошибок трудных')
+co4 = Comment.objects.create(user=u2, post=p1, text='и гений парадоксов друг')
+
+co1.like()
+p1.dislike()
+p2.like()
+p2.like()
+n1.like()
+co2.dislike()
+co3.like()
+co3.like()
+co4.like()
+
+a1 = Author.objects.get(pk=1)
+a2 = Author.objects.get(pk=2)
+
+a1.update_rating()
+a2.update_rating()
+
+a = Author.objects.order_by('ratingAuthor')[0]
+print(f'Автор: {a.authorUser}, рейтинг: {a.ratingAuthor}')
+
+p = Post.objects.filter().order_by('-rating')[0]
+
+print(f'Дата: {p.dateCreation}, Автор: {p.author.authorUser}, Рейтинг: {p.rating}, Заголовок: {p.title}, Превью: {p.preview()}')
+
+for c in Comment.objects.filter(post_id=p.id):
+    print(f'Дата: {c.created}, Автор: {c.user}, Рейтинг: {c.rating}, Текст: {c.text}\r\n')

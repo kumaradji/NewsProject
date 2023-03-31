@@ -7,37 +7,18 @@ from .models import *
 class PostList(ListView):
     model = Post
     ordering = 'dateCreation'
-    template_name = 'news.html'
+    template_name = 'news-list.html'
     context_object_name = 'posts'
 
-    paginate_by = 10
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['time_now'] = datetime.utcnow()
-        context['next_news'] = "Следите за новостями!"
-        return context
-
-    # def news_page(self):
-    #     all_news = Post.objects.all()
-    #     print(all_news)
-
-#
-# class CommentDetail(DetailView):
-#     model = Comment
-#     template_name = 'news.html'
-#     context_object_name = 'post'
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['time_now'] = datetime.utcnow()
+    #     context['next_news'] = "Следите за новостями!"
+    #     return context
 
 
 class PostDetail(DetailView):
     model = Post
-    template_name = 'post.html'
+    template_name = 'post_list.html'
     context_object_name = 'post'
 
-
-
-
-# class AuthorDetail(DetailView):
-#     model = Author
-#     template_name = 'news.html'
-#     context_object_name = 'post'

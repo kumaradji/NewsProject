@@ -25,7 +25,7 @@ class Author(models.Model):
         self.save()
 
     def __str__(self):
-        return self.authorUser.name
+        return self.authorUser
 
 
 # Категории новостей/статей
@@ -42,7 +42,6 @@ class Category(models.Model):
 
 # Статьи и новости, которые создают пользователи
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     NEWS = 'NW'
     ARTICLE = 'AR'
     CATEGORY_CHOICES = (
@@ -50,8 +49,8 @@ class Post(models.Model):
         (ARTICLE, 'Статья'),
     )
 
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
-    isnews = models.BooleanField(default=False)
     dateCreation = models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=64)
@@ -109,4 +108,4 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.user.name} про "{self.post}"'
+        return f'{self.user} про "{self.post}"'

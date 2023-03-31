@@ -1,11 +1,12 @@
-{% extends 'default.html' %} 
-{% load custom_filters %}
-{% load custom_tags %}
+{% extends 'flatpages/default.html' %}
+<!--{% load custom_filters %}-->
+<!--{% load custom_tags %}-->
 {% block title %}Новости{% endblock title %}
 {% block content %}
 {% if posts %}
 <h1>Все новости</h1>
-<table><tbody>
+<table>
+    <tbody>
     <tr class=title>
         <td>Заголовок</td>
         <td>Дата</td>
@@ -18,7 +19,8 @@
 <!--    <td>{{p.preview|censor}}</td>-->
 <!--</tr>-->
 <!--{%endfor%}-->
-<!--</tbody></table>-->
+    </tbody>
+</table>
 
 <!--{% if page_obj.has_previous %}-->
 <!--  <a href="?page=1">1</a>-->
@@ -42,7 +44,7 @@
 <!--  {% endif %}-->
 <!--{% endif %}-->
 
-{% else %}
+<!--{% else %}-->
 <h1>Новостей нет</h1>
 {% endif%}
 {% endblock content %}
