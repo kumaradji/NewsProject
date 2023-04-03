@@ -5,9 +5,25 @@
 {% endblock title %}
 
 {% block content %}
-<h1>Все новости здесь</h1>
+<h1>Все новости здесь:</h1>
+<hr>
 
-    {{ news }}
+<table cellpadding="12">
+    <tr class=title>
+        <td>Заголовок</td>
+        <td>Дата</td>
+        <td>Предпросмотр</td>
+    </tr>
+</table>
+
+{% for c in news %}
+
+    <h1><li>{{c.title}}</li></h1>
+    <li>{{c.preview}}</li>
+    <li>{{c.dateCreation}}</li>
+    <li>{{c.categoryType}}</li>
+
+{% endfor %}
 
 <hr>
 {% endblock content %}
