@@ -25,7 +25,7 @@ class Author(models.Model):
         self.save()
 
     def __str__(self):
-        return self.authorUser
+        return f'{self.authorUser}'
 
 
 # Категории новостей/статей
@@ -108,4 +108,4 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.user} про "{self.post}"'
+        return f'{self.user.username} про "{self.post}"'

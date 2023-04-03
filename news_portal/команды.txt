@@ -22,8 +22,9 @@ python3 manage.py shell
 from news.models import *
 
 git branch
-
-
+git branch new_branch_name
+git checkout -b new_branch_name
+https://habr.com/ru/company/ruvds/blog/599929/
 
 # Список команд для shell
 
@@ -33,6 +34,7 @@ u1 = User.objects.create_user('Громов')
 u2 = User.objects.create_user('Солнцев')
 a1 = Author.objects.create(authorUser=u1)
 a2 = Author.objects.create(authorUser=u2)
+a3 = Author.objects.create(authorUser=u3)
 
 c1 = Category.objects.create(name='Спорт')
 c2 = Category.objects.create(name='Политика')
@@ -44,6 +46,7 @@ p1 = Post.objects.create(author=a2, categoryType='AR', title='Новости х�
 p2 = Post.objects.create(author=a2, categoryType='AR', title='В разгаре страда', text='Комбайны выходят на поля. Скоро хлеб отправиться в закрома родины')
 
 n1 = Post.objects.create(author=a1, categoryType='NW', title='На полях страны', text='Молодые колхозники осваивают новую технику')
+n2 = Post.objects.create(author=a2, categoryType='NW', title='В мире политики', text='С официальным визитом приьыл посол Зимбабве')
 
 pc1 = PostCategory.objects.create(post=p1, category=c1)
 pc2 = PostCategory.objects.create(post=p1, category=c2)
