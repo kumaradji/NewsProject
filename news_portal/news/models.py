@@ -62,7 +62,7 @@ class Post(models.Model):
         verbose_name_plural = 'Новости'
 
     def preview(self):
-        return self.text[0:123] + '...'
+        return self.text[0:20] + '...'
 
     def like(self):
         self.rating += 1

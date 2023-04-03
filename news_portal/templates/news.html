@@ -1,0 +1,27 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+{% block title %}
+NEWS
+{% endblock title %}
+
+{% block content %}
+<h1>ВСЕ НОВОСТИ</h1>
+
+<table cellpadding="16">
+    <tr class=title>
+        <td>Заголовок</td>
+        <td>Дата публикации</td>
+        <td>Предпросмотр</td>
+    </tr>
+    <hr>
+    {% for c in news %}
+    <tr>
+        <td>{{ c.title }}</td>
+        <td>{{ c.dateCreation | date:'d.m.Y'}}</td>
+        <td>{{ c.preview }}</td>
+        {% endfor %}
+
+</table cellpadding="16">
+
+{% endblock content %}

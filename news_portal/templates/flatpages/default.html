@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>{%block title%} Новости {%endblock title%}</title>
+    <title>{%block title%}{%endblock title%}</title>
     {% load static %}
     {% load custom_filters %}
     {% load custom_tags %}
@@ -25,17 +25,17 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/news_portal">Новости на {% now %}</a>
+                    <a class="nav-link" href="/news">Новости на {% now %}</a>
                 </li>
-<!--                <li class="nav-item active">-->
-<!--                    <a class="nav-link" href="/news/search">Поиск</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item active">-->
-<!--                    <a class="nav-link" href="/news/article/create">Написать статью</a>-->
-<!--                </li>-->
-<!--                <li class="nav-item active">-->
-<!--                    <a class="nav-link" href="/news/create">Написать новость</a>-->
-<!--                </li>-->
+                <!--                <li class="nav-item active">-->
+                <!--                    <a class="nav-link" href="/news/search">Поиск</a>-->
+                <!--                </li>-->
+                <!--                <li class="nav-item active">-->
+                <!--                    <a class="nav-link" href="/news/article/create">Написать статью</a>-->
+                <!--                </li>-->
+                <!--                <li class="nav-item active">-->
+                <!--                    <a class="nav-link" href="/news/create">Написать новость</a>-->
+                <!--                </li>-->
             </ul>
         </div>
     </div>
@@ -43,10 +43,8 @@
 <!-- Page content-->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 text-center">
+        <div class="col-lg-16 text-center">
             {% block content %}
-            {{ flatpage.content }}
-
             {% endblock content %}
         </div>
     </div>
