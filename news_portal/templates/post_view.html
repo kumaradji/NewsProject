@@ -4,14 +4,16 @@
 {% load custom_tags %}
 
 {% block title %}
-новость № {{post.id}}
+новость № {{ post.id }}
 {% endblock title %}
 
 {% block content %}
-<h2>новость № {{post.id}}</h2>
+<h2>новость № {{ post.id }}</h2>
 
-<h1>{{post.title}}</h1>
-<h2>{{post.text | censor}}</h2>
-<h2>{{post.dateCreation | date:'d.m.Y'}}</h2>
+<h1>{{ post.title|censor }}</h1>
+<h4>дата публикации {{ post.dateCreation|date:'d.m.Y' }}</h4>
+<p>{{ post.text|censor }}</p>
+<h5>автор: {{ post.author }}</h5>
+
 
 {% endblock content %}

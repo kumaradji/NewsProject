@@ -3,15 +3,11 @@ from django import template
 register = template.Library()
 
 replacements = {
-    'dolor': 'd****',
-    'Dolor': 'D****',
-    'ips': 'i**',
-    'Забитый': 'За*****',
-    'Ips': 'I**'
+    'Редиска': 'Ре*****',
+    'редиска': 'ре*****'
 }
 
-# Регистрируем фильтр под именем currency, чтоб Django понимал,
-# что это именно фильтр для шаблонов, а не простая функция.
+
 @register.filter()
 def censor(value):
     text = value
