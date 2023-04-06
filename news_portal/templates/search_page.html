@@ -1,0 +1,34 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_tags %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+<h2>новости</h2>
+    <form action="" method="det">
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти" />
+    </form>
+    <hr>
+
+<table cellpadding="16">
+    <tr class=title>
+        <td>Заголовок</td>
+        <td>Дата публикации</td>
+        <td>Предпросмотр</td>
+    </tr>
+    <hr>
+    {% for c in search_page %}
+    <tr>
+        <td>{{ c.title|censor }}</td>
+        <td>{{ c.dateCreation|date:'d.m.Y'}}</td>
+        <td>{{ c.preview|truncatechars:20 }}</td>
+    <tr>
+    {% endfor %}
+
+</table cellpadding="16">
+
+{% endblock content %}
