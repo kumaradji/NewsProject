@@ -1,24 +1,69 @@
 {% extends 'flatpages/default.html' %}
-
+{% load custom_filters %}
 {% load custom_tags %}
 
-{% block title %}
-поиск новостей
-{% endblock title %}
+{% block title %}Поиск новостей{% endblock title %}
 
 {% block content %}
+<h1>Поиск новостей</h1>
 <form action="" method="get">
-    {{ filterset.form.non_field_errors }}
-
-    {{ filterset.form.name__icontains.errors }}
-    <label for="{{ filterset.form.name__icontains.id_for_label }}">Search</label>
-    <input
-            id="{{ filterset.form.name__icontains.id }}"
-            name="{{ filterset.form.name__icontains.name }}"
-            value="{{ filterset.form.name__icontains.value }}"
-            class="form-control"
-    >
-    <input type="submit" class="mt-3 btn-primary" value="Найти"/>
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Найти"/>
 </form>
+
+<hr>
+{% if search_page %}
+<h1>Найденные новости</h1>
+<table>
+    <tbody>
+    <tr class=title>
+        <td>Заголовок</td>
+        <td>Дата публикации</td>
+        <td>Текст</td>
+    </tr>
+
+    {% for p in search_page %}
+    <tr>
+        <td><a href="/news/{{p.id}}">{{p.title|censor}}</a></td>
+        <td>{{p.dateCreation|date:'d.m.Y'}}</td>
+        <td>{{p.text|truncatechars:20|censor}}</td>
+<!--        <td>-->
+<!--            {% if p.author == request.user.author %}-->
+<!--            <a href="{ url 'post_edit' pk=post.id %}">Изменить</a>-->
+<!--            {% endif %}-->
+<!--            {% if perms.new.post_delete %}-->
+<!--            <a href="{ url 'post_delete' post.id %}">Удалить</a>-->
+<!--            {% endif %}-->
+<!--        </td>-->
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+
+{% if page_obj.has_previous %}
+  <a href="?{% url_replace page=1 %}">1</a>
+  {% if page_obj.previous_page_number != 1 %}
+    {% if page_obj.number != 3 %}
+      ...
+    {% endif %}
+    <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+  {% endif %}
+{% endif %}
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+  {% if paginator.num_pages != page_obj.next_page_number %}
+    {% if page_obj.number != page_obj.paginator.num_pages|add:-2 %}
+      ...
+    {% endif %}
+    <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+  {% endif %}
+{% endif %}
+
+{% else %}
+<h1>Новости не найдены</h1>
+{% endif%}
 
 {% endblock content %}

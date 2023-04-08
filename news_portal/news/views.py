@@ -1,14 +1,16 @@
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .filters import PostFilter
+from django_filters import FilterSet, DateTimeFilter
 from .forms import PostForm
+from django.forms import DateTimeInput
 from .models import *
 from django.urls import reverse_lazy
 
 
-class PostList(ListView):
+class PostList(LoginRequiredMixin, ListView):
     model = Post
     ordering = '-dateCreation'
     template_name = 'news.html'
@@ -26,9 +28,17 @@ class PostList(ListView):
         return context
 
 
-class PostSearch(ListView):
+class PostSearch(LoginRequiredMixin, ListView):
+    raise_exception = True
+    # Указываем модель, объекты которой мы будем выводить
     model = Post
+    # Поле, которое будет использоваться для сортировки объектов
+    ordering = '-dateCreation'
+    # Указываем имя шаблона, в котором будут все инструкции о том,
+    # как именно пользователю должны быть показаны наши объекты
     template_name = 'search_page.html'
+    # Это имя списка, в котором будут лежать все объекты.
+    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'search_page'
     paginate_by = 3
 
@@ -43,6 +53,24 @@ class PostSearch(ListView):
         return context
 
 
+class PostFilter(FilterSet):
+    added_after = DateTimeFilter(
+        field_name='added_at',
+        lookup_expr='gt',
+        widget=DateTimeInput(
+            format='%Y-%m-%dT%H:%M',
+            attrs={'type': 'datetime-local'},
+        ),
+    )
+
+    class Meta:
+        model = Post
+        fields = {
+            'title': ['icontains'],
+            'postCategory': ['icontains'],
+        }
+
+
 class PostDetail(DetailView):
     model = Post
     template_name = 'post_view.html'
@@ -50,10 +78,28 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
-    template_name = 'post_edit.html'
+    template_name = 'create_post.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.quantity = 13
+        return super().form_valid(form)
+
+
+class NewsCreate(LoginRequiredMixin, CreateView):
+    raise_exception = True
+    form_class = PostForm
+    model = Post
+    template_name = 'create_news.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        # post.isnews = True
+        return super().form_valid(form)
 
 
 # Добавляем представление для изменения товара.

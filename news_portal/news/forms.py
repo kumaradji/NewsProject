@@ -5,20 +5,20 @@ from .models import *
 
 
 class PostForm(forms.ModelForm):
-    description = forms.CharField(min_length=10)
+    # description = forms.CharField(min_length=10)
 
     class Meta:
         model = Post
-        fields = ['author', 'title', 'postCategory', 'rating']
+        fields = ['author', 'title', 'text']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        description = cleaned_data.get("description")
-        name = cleaned_data.get("name")
-
-        if name == description:
-            raise ValidationError(
-                "Описание не должно быть идентично названию."
-            )
-
-        return cleaned_data
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     description = cleaned_data.get("description")
+    #     name = cleaned_data.get("name")
+    #
+    #     if name == description:
+    #         raise ValidationError(
+    #             "Описание не должно быть идентично названию."
+    #         )
+    #
+    #     return cleaned_data
