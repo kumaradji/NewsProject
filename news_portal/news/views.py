@@ -12,8 +12,12 @@ from django.urls import reverse_lazy
 
 class PostList(LoginRequiredMixin, ListView):
     model = Post
+    # указываем способ сортировки
     ordering = '-dateCreation'
+    # указываем шаблон представления
     template_name = 'news.html'
+    # указываем переменную, которую будем использовать в
+    # шаблоне news.html
     context_object_name = 'news'
     paginate_by = 10
 
@@ -50,6 +54,7 @@ class PostSearch(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['cat_selected'] = 0
         return context
 
 
@@ -67,7 +72,7 @@ class PostFilter(FilterSet):
         model = Post
         fields = {
             'title': ['icontains'],
-            'postCategory': ['icontains'],
+            # 'postCategory': ['icontains'],
         }
 
 
@@ -77,6 +82,9 @@ class PostDetail(DetailView):
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
 
+    # def get_queryset(self):
+    #     return Post.objects.filter(postCategory__slag=self.kwargs['news'])
+
 
 class PostCreate(LoginRequiredMixin, CreateView):
     raise_exception = True
@@ -85,7 +93,8 @@ class PostCreate(LoginRequiredMixin, CreateView):
     template_name = 'create_post.html'
 
     def form_valid(self, form):
-        post = form.save(commit=False)
+        # post = form.save(commit=False)
+        form.instance.author = self.request.user.author
         post.quantity = 13
         return super().form_valid(form)
 
