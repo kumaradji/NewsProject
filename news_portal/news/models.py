@@ -54,6 +54,7 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
+    is_news = models.BooleanField(default=False)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=64)
     text = models.TextField()
@@ -78,8 +79,8 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.title}: {self.text[:25]}'
 
-    def get_absolute_url(self):
-        return reverse('post_detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('title', args=[str(self.id)])
 
 
 class PostCategory(models.Model):

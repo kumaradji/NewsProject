@@ -64,9 +64,6 @@ class PostDetail(DetailView):
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
 
-    def get_queryset(self):
-        return Post.objects.filter(postCategory__slag=self.kwargs['news'])
-
 
 class PostCreate(LoginRequiredMixin, CreateView):
     raise_exception = True
@@ -76,8 +73,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        form.instance.author = self.request.user.author
-        post.quantity = 13
+        post.is_news = True
         return super().form_valid(form)
 
 
@@ -89,7 +85,7 @@ class NewsCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        # post.isnews = True
+        post.is_news = True
         return super().form_valid(form)
 
 
