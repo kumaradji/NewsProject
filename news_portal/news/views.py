@@ -44,7 +44,7 @@ class PostSearch(LoginRequiredMixin, ListView):
     # Это имя списка, в котором будут лежать все объекты.
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'search_page'
-    paginate_by = 3
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -58,32 +58,14 @@ class PostSearch(LoginRequiredMixin, ListView):
         return context
 
 
-class PostFilter(FilterSet):
-    added_after = DateTimeFilter(
-        field_name='added_at',
-        lookup_expr='gt',
-        widget=DateTimeInput(
-            format='%Y-%m-%dT%H:%M',
-            attrs={'type': 'datetime-local'},
-        ),
-    )
-
-    class Meta:
-        model = Post
-        fields = {
-            'title': ['icontains'],
-            # 'postCategory': ['icontains'],
-        }
-
-
 class PostDetail(DetailView):
     model = Post
     template_name = 'post_view.html'
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
 
-    # def get_queryset(self):
-    #     return Post.objects.filter(postCategory__slag=self.kwargs['news'])
+    def get_queryset(self):
+        return Post.objects.filter(postCategory__slag=self.kwargs['news'])
 
 
 class PostCreate(LoginRequiredMixin, CreateView):
@@ -93,7 +75,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
     template_name = 'create_post.html'
 
     def form_valid(self, form):
-        # post = form.save(commit=False)
+        post = form.save(commit=False)
         form.instance.author = self.request.user.author
         post.quantity = 13
         return super().form_valid(form)

@@ -9,8 +9,14 @@ class PostFilter(FilterSet):
         lookup_expr='icontains',
         label='Заголовок'
     )
+    add_category = ModelChoiceFilter(
+        field_name='postCategory',
+        queryset=Category.objects.all(),
+        label='Категория поста',
+        empty_label='all'
+    )
     add_date = DateTimeFilter(
-        field_name='created',
+        field_name='dateCreation',
         lookup_expr='gt',
         label='Дата создания',
         widget=DateTimeInput(
@@ -18,15 +24,3 @@ class PostFilter(FilterSet):
             attrs={'type': 'datetime-local'},
         ),
     )
-    add_category = ModelChoiceFilter(
-        field_name='postcategory__categoryThrough',
-        queryset=Category.objects.all(),
-        label='Категория поста',
-        empty_label='all'
-    )
-    class Meta:
-        model = Post
-        fields = {
-            'title': ['icontains'],
-            'rating': ['gt', 'lt']
-        }

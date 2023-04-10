@@ -76,10 +76,10 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.title}: {self.text[:25]}'
 
     def get_absolute_url(self):
-        return reverse('post_search', args=[str(self.text)])
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
