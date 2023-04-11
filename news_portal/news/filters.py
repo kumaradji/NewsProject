@@ -18,7 +18,7 @@ class PostFilter(FilterSet):
     add_date = DateTimeFilter(
         field_name='dateCreation',
         lookup_expr='gt',
-        label='Дата создания',
+        label='Дата публикации',
         widget=DateTimeInput(
             format='%Y-%m-%dT%H:%M',
             attrs={'type': 'datetime-local'},

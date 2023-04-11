@@ -7,7 +7,7 @@ from django_filters import FilterSet, DateTimeFilter
 from .forms import PostForm
 from django.forms import DateTimeInput
 from .models import *
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 
 class PostList(LoginRequiredMixin, ListView):
@@ -64,9 +64,6 @@ class PostDetail(DetailView):
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
 
-    def get_queryset(self):
-        return Post.objects.filter(postCategory__slag=self.kwargs['news'])
-
 
 class PostCreate(LoginRequiredMixin, CreateView):
     raise_exception = True
@@ -80,6 +77,9 @@ class PostCreate(LoginRequiredMixin, CreateView):
         post.quantity = 13
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse('post_create', kwargs={'pk': self.object.pk})
+
 
 class NewsCreate(LoginRequiredMixin, CreateView):
     raise_exception = True
@@ -89,8 +89,11 @@ class NewsCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        # post.isnews = True
+        post.is_news = True
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('news_create', kwargs={'pk': self.object.pk})
 
 
 # Добавляем представление для изменения товара.

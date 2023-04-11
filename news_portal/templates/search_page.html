@@ -16,15 +16,15 @@
 <table>
     <thead>
         <th><b> Заголовок &nbsp </b></th>
-        <th><b> &nbsp Дата публикации &nbsp </b> </th>
         <th><b> &nbsp Категория &nbsp </b> </th>
+        <th><b> &nbsp Дата публикации &nbsp </b> </th>
         <th><b> &nbsp Краткое содержание &nbsp </b></th>
     <thead>
     {% for news in search_page %}
         <tr>
             <td>{{ news.title|censor }}</td>
+            <td>{{ news.postCategory }}</td>
             <td>{{ news.dateCreation }}</td>
-            <td>{{ news.categoryType }}</td>
             <td>{{ news.preview|censor }}</td>
         </tr>
     {% endfor %}
