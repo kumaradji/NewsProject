@@ -10,7 +10,7 @@ from .models import *
 from django.urls import reverse_lazy, reverse
 
 
-class PostList(LoginRequiredMixin, ListView):
+class PostList(ListView):
     model = Post
     # указываем способ сортировки
     ordering = '-dateCreation'
@@ -32,7 +32,7 @@ class PostList(LoginRequiredMixin, ListView):
         return context
 
 
-class PostSearch(LoginRequiredMixin, ListView):
+class PostSearch(ListView):
     raise_exception = True
     # Указываем модель, объекты которой мы будем выводить
     model = Post
@@ -77,33 +77,18 @@ class PostCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('post_create', kwargs={'pk': self.object.pk})
-
-
-class NewsCreate(LoginRequiredMixin, CreateView):
-    raise_exception = True
-    form_class = PostForm
-    model = Post
-    template_name = 'create_news.html'
-
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.is_news = True
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('news_create', kwargs={'pk': self.object.pk})
+        return reverse('post', kwargs={'pk': self.object.pk})
 
 
 # Добавляем представление для изменения товара.
-class PostUpdate(UpdateView):
+class PostUpdate(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
 
 
 # Представление удаляющее товар.
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')

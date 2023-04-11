@@ -58,7 +58,7 @@ class Post(models.Model):
     title = models.CharField(max_length=64)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
-    added_at = models.DateTimeField(auto_now=True,)
+    added_at = models.DateTimeField(auto_now=True, )
 
     class Meta:
         verbose_name = 'Новость'
@@ -78,14 +78,11 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.title}: {self.text[:25]}'
 
-    # def get_absolute_url(self):
-    #     return reverse('post_create', kwargs={'pk': self.pk})
-
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    related_name = 'post'
+    related_name = 'post_cat'
 
     class Meta:
         verbose_name = 'Категория новости'
@@ -94,8 +91,8 @@ class PostCategory(models.Model):
     def __str__(self):
         return f'{self.post} ({self.category})'
 
-    def get_absolute_url(self):
-        return reverse('post_detail', args=[str(self.id)])
+    # def get_absolute_url(self):
+    #     return reverse('news', args=[str(self.id)])
 
 
 class Comment(models.Model):
@@ -119,4 +116,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.user.username} про "{self.post}"'
-
