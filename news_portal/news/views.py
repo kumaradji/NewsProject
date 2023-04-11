@@ -73,8 +73,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        form.instance.author = self.request.user.author
-        post.quantity = 13
+        post.is_news = True
         return super().form_valid(form)
 
     def get_success_url(self):
