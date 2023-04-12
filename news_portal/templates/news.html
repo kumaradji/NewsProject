@@ -2,7 +2,7 @@
 {% load custom_filters %}
 {% load custom_tags %}
 {% block title %}
-NEWS
+НОВОСТИ
 {% endblock title %}
 
 {% block content %}
@@ -10,12 +10,23 @@ NEWS
 <h1>НОВОСТИ</h1>
 <h5>всего новостей на странице: {{ news|length }} </h5>
 
+{% if perms.news.create_post %}
+<a href="{% url 'post_create' %}">Написать статью или новость</a>
+{% endif %}
+
+{% if news %}
+
 <table cellpadding="14">
     <tr class=title>
-        <td>Заголовок</td>
-        <td>Дата публикации</td>
-        <td>Предпросмотр</td>
-        <td>Автор</td>
+        <th><b> &nbsp Заголовок &nbsp </b></th>
+        <th><b> &nbsp Дата публикации &nbsp </b></th>
+        <th><b> &nbsp Предпросмотр &nbsp </b></th>
+        <th><b> &nbsp Автор &nbsp </b></th>
+
+        {% if perms.news.post_update or perms.news.post_delete %}
+        <th><b> &nbsp Действия &nbsp </b></th>
+        <th><b> &nbsp Действия &nbsp </b></th>
+        {% endif %}
     </tr>
     <hr>
 
@@ -25,12 +36,21 @@ NEWS
         <td>{{ c.dateCreation|date:'d.m.Y'}}</td>
         <td>{{ c.preview|censor }}</td>
         <td>{{ c.author }}</td>
+        {% if perms.news.post_delete %}
         <td><a href="{% url 'post_delete' c.id %}">Удалить</a></td>
+        {% endif %}
+        {% if perms.news.post_update %}
+        <td><a href="{% url 'post_update' c.id %}">Редактировать</a></td>
+        {% endif %}
     <tr>
         {% endfor %}
     <tr>
 
 </table cellpadding="14">
+
+{% else %}
+<h2>Новостей нет!</h2>
+{% endif %}
 
 {% if page_obj.has_previous %}
 {# Для каждой ссылки пагинации указываем обработку через новый тег #}

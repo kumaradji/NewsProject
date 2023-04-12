@@ -15,23 +15,24 @@
 {% if search_page %}
 <table>
     <thead>
-        <th><b> Заголовок &nbsp </b></th>
-        <th><b> &nbsp Категория &nbsp </b> </th>
-        <th><b> &nbsp Дата публикации &nbsp </b> </th>
-        <th><b> &nbsp Краткое содержание &nbsp </b></th>
+    <th><b> &nbsp Заголовок &nbsp </b></th>
+    <th><b> &nbsp Категория &nbsp </b></th>
+    <th><b> &nbsp Дата публикации &nbsp </b></th>
+    <th><b> &nbsp Краткое содержание &nbsp </b></th>
     <thead>
     {% for news in search_page %}
-        <tr>
-            <td>{{ news.title|censor }}</td>
-            <td>{% for category in news.postCategory.all %}
-                {{ category.name }}
-                    {% endfor %}</td>
-            <td>{{ news.dateCreation }}</td>
-            <td>{{ news.preview|censor }}</td>
-        </tr>
+    <tr>
+        <td>{{ news.title|censor }}</td>
+        <td>{% for category in news.postCategory.all %}
+            {{ category.name }}
+            {% endfor %}
+        </td>
+        <td>{{ news.dateCreation }}</td>
+        <td>{{ news.preview|censor }}</td>
+    </tr>
     {% endfor %}
 <table>
-    <br>
+        <br>
 
 {% else %}
 <h1>Новости не найдены</h1>

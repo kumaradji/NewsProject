@@ -1,11 +1,9 @@
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .filters import PostFilter
-from django_filters import FilterSet, DateTimeFilter
 from .forms import PostForm
-from django.forms import DateTimeInput
 from .models import *
 from django.urls import reverse_lazy, reverse
 
@@ -63,8 +61,10 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(LoginRequiredMixin, CreateView):
+# Представление для создания новости
+class PostCreate(PermissionRequiredMixin, CreateView):
     raise_exception = True
+    permission_required = ('news.create_post',)
     form_class = PostForm
     model = Post
     template_name = 'create_post.html'
@@ -78,17 +78,20 @@ class PostCreate(LoginRequiredMixin, CreateView):
         return reverse('post', kwargs={'pk': self.object.pk})
 
 
-# Добавляем представление для изменения товара.
-class PostUpdate(LoginRequiredMixin, UpdateView):
+# Представление для изменения новости
+class PostUpdate(PermissionRequiredMixin, UpdateView):
     raise_exception = True
+    permission_required = ('news.post_edit',)
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
+    success_url = reverse_lazy('post_list')
 
 
-# Представление удаляющее товар.
-class PostDelete(LoginRequiredMixin, DeleteView):
+# Представление удаляющее новость
+class PostDelete(PermissionRequiredMixin, DeleteView):
     raise_exception = True
+    permission_required = ('news.post_delete',)
     model = Post
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('post')
+    success_url = reverse_lazy('post_list')
