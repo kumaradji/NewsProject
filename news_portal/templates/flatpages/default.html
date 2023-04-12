@@ -27,12 +27,15 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/news">Новости на {% now %}</a>
                 </li>
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="/news/search">Поиск</a>
-                                </li>
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="/news/create">Написать</a>
-
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/news/search">Поиск</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/news/create">Написать</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/news/<int:pk>/edit/">Редактировать</a>    <li class="nav-item active">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/news/<int:pk>/delete/">Удалить</a>
+                </li>
         </div>
     </div>
 </nav>

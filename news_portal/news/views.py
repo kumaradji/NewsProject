@@ -54,11 +54,11 @@ class PostSearch(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
-        context['cat_selected'] = 0
         return context
 
 
 class PostDetail(DetailView):
+    raise_exception = True
     model = Post
     template_name = 'post_view.html'
     slug_url_kwarg = 'post_slug'
@@ -82,6 +82,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
 # Добавляем представление для изменения товара.
 class PostUpdate(LoginRequiredMixin, UpdateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -89,6 +90,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 
 # Представление удаляющее товар.
 class PostDelete(LoginRequiredMixin, DeleteView):
+    raise_exception = True
     model = Post
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('post')

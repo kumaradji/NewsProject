@@ -23,7 +23,9 @@
     {% for news in search_page %}
         <tr>
             <td>{{ news.title|censor }}</td>
-            <td>{{ news.postCategory }}</td>
+            <td>{% for category in news.postCategory.all %}
+                {{ category.name }}
+                    {% endfor %}</td>
             <td>{{ news.dateCreation }}</td>
             <td>{{ news.preview|censor }}</td>
         </tr>
