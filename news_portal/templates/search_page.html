@@ -1,0 +1,41 @@
+{% extends 'default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}Поиск новостей{% endblock title %}
+
+{% block content %}
+<h1>Поиск новостей</h1>
+<form action="" method="get">
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Найти"/>
+</form>
+
+<hr>
+{% if search_page %}
+<table>
+    <thead>
+    <th><b> &nbsp Заголовок &nbsp </b></th>
+    <th><b> &nbsp Категория &nbsp </b></th>
+    <th><b> &nbsp Дата публикации &nbsp </b></th>
+    <th><b> &nbsp Краткое содержание &nbsp </b></th>
+    <thead>
+    {% for news in search_page %}
+    <tr>
+        <td>{{ news.title|censor }}</td>
+        <td>{% for category in news.postCategory.all %}
+            {{ category.name }}
+            {% endfor %}
+        </td>
+        <td>{{ news.dateCreation }}</td>
+        <td>{{ news.preview|censor }}</td>
+    </tr>
+    {% endfor %}
+<table>
+        <br>
+
+{% else %}
+<h1>Новости не найдены</h1>
+{% endif%}
+
+{% endblock content %}
