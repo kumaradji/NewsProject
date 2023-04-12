@@ -33,7 +33,6 @@ class PostList(ListView):
 
 
 class PostSearch(ListView):
-    raise_exception = True
     # Указываем модель, объекты которой мы будем выводить
     model = Post
     # Поле, которое будет использоваться для сортировки объектов
@@ -58,7 +57,6 @@ class PostSearch(ListView):
 
 
 class PostDetail(DetailView):
-    raise_exception = True
     model = Post
     template_name = 'post_view.html'
     slug_url_kwarg = 'post_slug'

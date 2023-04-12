@@ -25,14 +25,10 @@ NEWS
         <td>{{ c.dateCreation|date:'d.m.Y'}}</td>
         <td>{{ c.preview|censor }}</td>
         <td>{{ c.author }}</td>
-
-    {% endfor %}
+        <td><a href="{% url 'post_delete' c.id %}">Удалить</a></td>
     <tr>
-
-    {% for post in news %}
-    <a href="{% url 'post_delete' post.id %}">Удалить</a>
-    {% endfor %}
-    <input type="submit" value="Удалить" />
+        {% endfor %}
+    <tr>
 
 </table cellpadding="14">
 
