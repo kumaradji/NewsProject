@@ -1,4 +1,4 @@
-{% extends 'flatpages/default.html' %}
+{% extends 'default.html' %}
 {% load custom_filters %}
 {% load custom_tags %}
 {% block title %}
@@ -25,8 +25,14 @@ NEWS
         <td>{{ c.dateCreation|date:'d.m.Y'}}</td>
         <td>{{ c.preview|censor }}</td>
         <td>{{ c.author }}</td>
+
+    {% endfor %}
     <tr>
-        {% endfor %}
+
+    {% for post in news %}
+    <a href="{% url 'post_delete' post.id %}">Удалить</a>
+    {% endfor %}
+    <input type="submit" value="Удалить" />
 
 </table cellpadding="14">
 

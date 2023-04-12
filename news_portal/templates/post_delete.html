@@ -1,4 +1,4 @@
-{% extends 'flatpages/default.html' %}
+{% extends 'default.html' %}
 
 {% load custom_filters %}
 {% load custom_tags %}
@@ -6,8 +6,11 @@
 {% block content %}
 <h1>Удаление</h1>
 <hr>
+
 <form action="" method="post">
     {% csrf_token %}
+    {% for post in news %}
+    {% endfor %}
     <p>Удаляем "{{ post.title }}"?</p>
     <a href="/news/{{post.id}}">Не удалять</a>
     <input type="submit" value="Удалить" />
