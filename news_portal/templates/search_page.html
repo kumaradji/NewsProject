@@ -2,10 +2,11 @@
 {% load custom_filters %}
 {% load custom_tags %}
 
-{% block title %}Поиск новостей{% endblock title %}
+{% block title %}Поиск{% endblock title %}
 
 {% block content %}
-<h1>Поиск новостей</h1>
+<h1>Поиск новостей и статей</h1>
+
 <form action="" method="get">
     {{ filterset.form.as_p }}
     <input type="submit" value="Найти"/>
@@ -27,15 +28,15 @@
             {{ category.name }}
             {% endfor %}
         </td>
-        <td>{{ news.dateCreation }}</td>
+        <td>{{ news.dateCreation|date:'d.m.Y' }}</td>
         <td>{{ news.preview|censor }}</td>
     </tr>
     {% endfor %}
-<table>
-        <br>
+</table>
+<br>
 
 {% else %}
 <h1>Новости не найдены</h1>
-{% endif%}
+{% endif %}
 
 {% endblock content %}

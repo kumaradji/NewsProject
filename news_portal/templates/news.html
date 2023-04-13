@@ -8,7 +8,6 @@
 {% block content %}
 
 <h1>НОВОСТИ</h1>
-<h5>всего новостей на странице: {{ news|length }} </h5>
 
 {% if perms.news.create_post %}
 <a href="{% url 'post_create' %}">Написать статью или новость</a>
@@ -39,6 +38,7 @@
         {% if perms.news.post_delete %}
         <td><a href="{% url 'post_delete' c.id %}">Удалить</a></td>
         {% endif %}
+        &nbsp;
         {% if perms.news.post_update %}
         <td><a href="{% url 'post_update' c.id %}">Редактировать</a></td>
         {% endif %}
@@ -46,7 +46,7 @@
         {% endfor %}
     <tr>
 
-</table cellpadding="14">
+</table>
 
 {% else %}
 <h2>Новостей нет!</h2>
