@@ -85,7 +85,9 @@ class PostUpdate(PermissionRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
-    success_url = reverse_lazy('post_list')
+
+    def get_success_url(self):
+        return reverse('post', kwargs={'pk': self.object.pk})
 
 
 # Представление удаляющее новость
