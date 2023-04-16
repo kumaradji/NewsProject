@@ -1,5 +1,3 @@
-from audioop import reverse
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -90,9 +88,6 @@ class PostCategory(models.Model):
 
     def __str__(self):
         return f'{self.post} ({self.category})'
-
-    # def get_absolute_url(self):
-    #     return reverse('news', args=[str(self.id)])
 
 
 class Comment(models.Model):
