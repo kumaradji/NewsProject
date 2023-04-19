@@ -126,4 +126,8 @@ class Subscription(models.Model):
     )
 
 
-class Subscriber
+# проверить надо ли так?
+class Subscriber(models.Model):
+    sub_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(PostCategory, on_delete=models.CASCADE)
+
