@@ -10,10 +10,22 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# mandatory — не пускать пользователя на сайт до момента подтверждения почты
+# optional — сообщение о подтверждении почты будет отправлено,
+# но пользователь может залогиниться на сайте без подтверждения почты
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# Указали форму для дополнительной обработки регистрации пользователя
 ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
+# позволит избежать дополнительного входа
+# и активирует аккаунт сразу, как только мы перейдём по ссылке
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# хранит количество дней, когда доступна ссылка на подтверждение регистрации
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 10
+# Настройки почты отправляется на консоль
 
+# Настройки почты отправляется на консоль
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Настройки почты отправляется на реальный почтовый ящик
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
@@ -29,6 +41,9 @@ SERVER_EMAIL = "kumar9951447@yandex.ru"
 ADMINS = (
     ('Кумар', 'kumaradji@gmail.com'),
 )
+MANAGERS = (
+    ('Кумар', 'kumaradji@gmail.com'),
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django_filters',
-    # 'django_apscheduler',
+    'django_apscheduler',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -113,9 +128,7 @@ LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
 STATIC_URL = 'static/'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
