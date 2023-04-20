@@ -50,9 +50,11 @@ class Post(models.Model):
     )
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    is_news = models.BooleanField(default=False)
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
+    # postCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=64)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
@@ -120,7 +122,7 @@ class Subscription(models.Model):
         related_name='subscriptions',
     )
     category = models.ForeignKey(
-        to='Category',
+        to=Category,
         on_delete=models.CASCADE,
         related_name='subscriptions',
     )

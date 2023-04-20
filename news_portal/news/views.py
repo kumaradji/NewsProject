@@ -38,6 +38,7 @@ class PostList(ListView):
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         return context
 
+
 class PostSearch(ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = Post

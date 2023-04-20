@@ -26,15 +26,21 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="/news">Новости на {% now %}</a>
-                </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/news/search">Поиск</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/subscriptions/">Подписаться</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/logout">Выйти</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/accounts/login">Войти</a>
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="/news/search">Поиск</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/subscriptions/">Подписаться</a>
+
+                    {% if user.username %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts/logout">Выйти</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/news">Вы вошли как {{ user.username }}</a>
+                    {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts/login">Войти</a>
+                    {% endif %}
                 </li>
         </div>
     </div>
