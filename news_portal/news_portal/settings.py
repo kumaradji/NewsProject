@@ -20,7 +20,7 @@ ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 # и активирует аккаунт сразу, как только мы перейдём по ссылке
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 # хранит количество дней, когда доступна ссылка на подтверждение регистрации
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 10
+# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 10
 # Настройки почты отправляется на консоль
 
 # Настройки почты отправляется на консоль

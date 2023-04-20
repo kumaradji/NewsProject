@@ -13,7 +13,7 @@ class PostFilter(FilterSet):
         field_name='postCategory',
         queryset=Category.objects.all(),
         label='Категория поста',
-        empty_label='all'
+        empty_label='Select a category'
     )
     add_date = DateTimeFilter(
         field_name='dateCreation',

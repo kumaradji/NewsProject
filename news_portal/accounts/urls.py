@@ -1,8 +1,10 @@
-from allauth.account.views import LogoutView
-from django.urls import path
-from .views import SignUp, Logout
+from django.urls import path, include
+
+from news.views import upgrade_user
+from .views import SignUp
 
 urlpatterns = [
     path('signup/', SignUp.as_view(), name='signup'),
-    path('logout/', Logout.as_view(), name='logout'),
+    path('', include('allauth.urls')),
+    path('upgrade/', upgrade_user, name='account_upgrade'),
 ]

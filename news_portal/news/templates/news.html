@@ -10,7 +10,19 @@
 <h1>НОВОСТИ</h1>
 
 {% if perms.news.create_post %}
-<a href="{% url 'post_create' %}">Написать статью или новость</a>
+<button>
+    <a class="nav-link" href="{% url 'post_create' %}">
+        <h4><strong>Написать статью или новость</strong></h4>
+    </a>
+</button>
+{% endif %}
+
+{% if not is_author %}
+<button>
+    <a class="nav-link" href="{% url 'account_upgrade' %}">
+        <h4><strong>Стать автором!</strong></h4>
+    </a>
+</button>
 {% endif %}
 
 {% if news %}

@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -31,8 +34,9 @@ class PostList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['time_now'] = datetime.utcnow()
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         return context
-
 
 class PostSearch(ListView):
     # Указываем модель, объекты которой мы будем выводить
@@ -76,10 +80,21 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.is_news = True
+        post.author = self.request.user.author
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('post', kwargs={'pk': self.object.pk})
+
+
+@login_required
+def upgrade_user(request):
+    user = request.user
+    group = Group.objects.get(name='authors')
+    if not user.groups.filter(name='authors').exists():
+        group.user_set.add(user)
+        Author.objects.create(authorUser=User.objects.get(pk=user.id))
+    return redirect('/')
 
 
 # Представление для изменения новости

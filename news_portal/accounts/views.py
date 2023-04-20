@@ -11,8 +11,8 @@ class SignUp(CreateView):
     template_name = 'registration/signup.html'
 
 
-class Logout(LogoutView):
-    model = User
-    form_class = CustomSignupForm
-    success_url = '/accounts/logout'
-    template_name = 'registration/logged_out.html'
+# class Logout(LogoutView):
+#     model = User
+#     form_class = CustomSignupForm
+#     success_url = '/accounts/logout'
+#     template_name = 'registration/logged_out.html'
