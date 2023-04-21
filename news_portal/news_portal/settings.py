@@ -15,7 +15,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # но пользователь может залогиниться на сайте без подтверждения почты
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # Указали форму для дополнительной обработки регистрации пользователя
-ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
+# ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 # позволит избежать дополнительного входа
 # и активирует аккаунт сразу, как только мы перейдём по ссылке
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
@@ -29,15 +29,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "kumar9951447@yandex.ru"
-EMAIL_HOST_PASSWORD = "bjgmjgnocpdoypkf"
+EMAIL_HOST_USER = "kumaradji@yandex.ru"
+EMAIL_HOST_PASSWORD = "tltiblvgbecfzhds"
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
 
-DEFAULT_FROM_EMAIL = "kumar9951447@yandex.ru"
-SERVER_EMAIL = "kumar9951447@yandex.ru"
+DEFAULT_FROM_EMAIL = "kumaradji@yandex.ru"
+SERVER_EMAIL = "kumaradji@yandex.ru"
 ADMINS = (
     ('Кумар', 'kumaradji@gmail.com'),
 )

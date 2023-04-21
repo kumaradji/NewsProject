@@ -11,11 +11,7 @@ def add_user_to_group(sender, instance, created, **kwargs):
     if created:
         group = Group.objects.get(name='newuser')
         instance.groups.add(group)
-
-
-@receiver(post_save, sender=Post)
-def post_created(instance, created, **kwargs):
-    if not created:
+    else:
         return
 
     emails = User.objects.filter(
