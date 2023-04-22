@@ -114,21 +114,14 @@ class Comment(models.Model):
         return f'{self.user.username} про "{self.post}"'
 
 
-class Subscription(models.Model):
+class Subscriber(models.Model):
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         related_name='subscriptions',
     )
     category = models.ForeignKey(
-        to=Category,
+        to=Category,  # or PostCategory ???
         on_delete=models.CASCADE,
         related_name='subscriptions',
     )
-
-
-# проверить надо ли так?
-# class Subscriber(models.Model):
-#     sub_user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     sub_category = models.ForeignKey(PostCategory, on_delete=models.CASCADE)
-
