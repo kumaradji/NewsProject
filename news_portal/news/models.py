@@ -121,7 +121,10 @@ class Subscriber(models.Model):
         related_name='subscriptions',
     )
     category = models.ForeignKey(
-        to=Category,  # or PostCategory ???
+        to=Category,
         on_delete=models.CASCADE,
         related_name='subscriptions',
     )
+
+    def __str__(self):
+        return f'{self.user.username} подписан на {self.category}'
