@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 
 
 # Модель, содержащая объекты всех авторов
@@ -50,7 +52,6 @@ class Post(models.Model):
     )
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    is_news = models.BooleanField(default=False)
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
     postCategory = models.ManyToManyField(Category, through='PostCategory')
@@ -89,6 +90,19 @@ class PostCategory(models.Model):
 
     def __str__(self):
         return f'{self.post} ({self.category})'
+
+
+# проверить работу
+# @receiver(m2m_changed, sender=PostCategory)
+# def notify_about_new_post(sender, instance, send_notifications=None, **kwargs):
+#     if kwargs['action'] == 'post_add':
+#         postcategory = instance.postCategory.all()
+#         subscribers: list[str] = []
+#         for category in postcategory:
+#             subscribers += category.subscribers.all()
+#
+#         subscribers_email = [s.email for s in subscribers]
+#         send_notifications.delay(instance.preview(), instance.pk, instance.title, subscribers_email)
 
 
 class Comment(models.Model):

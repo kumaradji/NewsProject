@@ -7,9 +7,9 @@
 
 {% block content %}
 
-<h1>НОВОСТИ</h1>
+<h1>НОВОСТИ на {% now %}</h1>
 
-{% if perms.news.create_post %}
+{% if perms.news.add_post %}
 <button>
     <a class="nav-link" href="{% url 'post_create' %}">
         <h4><strong>Написать статью или новость</strong></h4>

@@ -6,32 +6,32 @@ from django.dispatch import receiver
 from .models import Post
 
 
-@receiver(post_save, sender=Post)
+@receiver(post_save, sender=User)
 def add_user_to_group(sender, instance, created, **kwargs):
     if created:
         group = Group.objects.get(name='newuser')
         instance.groups.add(group)
     else:
         return
-
-    emails = User.objects.filter(
-        subscriptions__category=instance.category
-    ).values_list('email', flat=True)
-
-    subject = f'Новая публикация в категории {instance.category}'
-
-    text_content = (
-        f'Публикация: {instance.title}\n'
-        f'Тема: {instance.text}\n\n'
-        f'Ссылка на публикацию: http://127.0.0.1{instance.get_absolute_url()}'
-    )
-    html_content = (
-        f'Публикация: {instance.title}<br>'
-        f'Тема: {instance.text}<br><br>'
-        f'<a href="http://127.0.0.1{instance.get_absolute_url()}">'
-        f'Ссылка на публикацию</a>'
-    )
-    for email in emails:
-        msg = EmailMultiAlternatives(subject, text_content, None, [email])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
+#
+#     # emails = User.objects.filter(
+#     #     subscriptions__category=instance.category
+#     # ).values_list('email', flat=True)
+#     #
+#     # subject = f'Новая публикация в категории {instance.category}'
+#
+#     text_content = (
+#         f'Публикация: {instance.username}\n'
+#         f'Тема: {instance.text}\n\n'
+#         f'Ссылка на публикацию: http://127.0.0.1{instance.get_absolute_url()}'
+#     )
+#     html_content = (
+#         f'Публикация: {instance.title}<br>'
+#         f'Тема: {instance.text}<br><br>'
+#         f'<a href="http://127.0.0.1{instance.get_absolute_url()}">'
+#         f'Ссылка на публикацию</a>'
+#     )
+#     for email in emails:
+#         msg = EmailMultiAlternatives(subject, text_content, None, [email])
+#         msg.attach_alternative(html_content, "text/html")
+#         msg.send()

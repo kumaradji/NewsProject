@@ -13,7 +13,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # mandatory — не пускать пользователя на сайт до момента подтверждения почты
 # optional — сообщение о подтверждении почты будет отправлено,
 # но пользователь может залогиниться на сайте без подтверждения почты
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 # Указали форму для дополнительной обработки регистрации пользователя
 # ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 # позволит избежать дополнительного входа
@@ -21,8 +21,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 # хранит количество дней, когда доступна ссылка на подтверждение регистрации
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 10
-# Настройки почты отправляется на консоль
-
 # Настройки почты отправляется на консоль
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Настройки почты отправляется на реальный почтовый ящик
@@ -39,7 +37,7 @@ EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
 DEFAULT_FROM_EMAIL = "kumaradji@yandex.ru"
 SERVER_EMAIL = "kumaradji@yandex.ru"
 ADMINS = (
-    ('Кумар', 'kumaradji@gmail.com'),
+    ('Кумар', 'kumaradji@me.com'),
 )
 MANAGERS = (
     ('Кумар', 'kumaradji@gmail.com'),

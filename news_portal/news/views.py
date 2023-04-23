@@ -73,7 +73,7 @@ class PostDetail(DetailView):
 # Представление для создания новости
 class PostCreate(PermissionRequiredMixin, CreateView):
     raise_exception = True
-    permission_required = ('news.create_post',)
+    permission_required = 'news.add_post'
     form_class = PostForm
     model = Post
     template_name = 'create_post.html'
