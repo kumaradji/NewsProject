@@ -7,4 +7,4 @@ class NewsConfig(AppConfig):
     verbose_name = 'Новости'
 
     def ready(self):
-        from . import signals
+        from . import signals  # выполнение модуля -> регистрация сигналов
