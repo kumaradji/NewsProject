@@ -1,9 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import post_save
-from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from .models import Post
 from .views import PostCreate
 
 
@@ -15,18 +13,6 @@ def add_user_to_group(sender, instance, created, **kwargs):
     else:
         return
 
-
-# проверить работу
-# @receiver(post_save, sender=Post)
-# def notify_about_new_post(sender, instance, send_notifications=None, **kwargs):
-# if kwargs['action'] == 'post_add':
-#     postcategory = instance.postCategory.all()
-#     subscribers: list[str] = []
-#     for category in postcategory:
-#         subscribers += category.subscribers.all()
-#
-#     subscribers_email = [s.email for s in subscribers]
-#     send_notifications.delay(instance.preview(), instance.pk, instance.title, subscribers_email)
 
 @receiver(post_save, sender=PostCreate)
 def news_created(instance, created, **kwargs):

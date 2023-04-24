@@ -151,7 +151,7 @@ def subscriptions(request):
 
 
 def post_share(request, post_id):
-    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    post = get_object_or_404(Post, id=post_id)
     sent = False
 
     if request.method == 'POST':
