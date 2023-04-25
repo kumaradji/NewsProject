@@ -58,10 +58,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
-    'news',
+    'news.apps.NewsConfig',
 ]
 
 SITE_ID = 1
+SITE_URL = 'http://127.0.0.1:8000'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

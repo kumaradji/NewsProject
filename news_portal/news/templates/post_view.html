@@ -15,5 +15,16 @@
 <p>{{ post.text|censor }}</p>
 <h5>автор: {{ post.author }}</h5>
 
+{% if perms.news.post_delete %}
+<p class="text-normal fs-12">
+    <a href="{% url 'post_delete' post.id %}" class="btn-secondary btn-sm">Удалить</a>
+</p>
+{% endif %}
 
-{% endblock content %}
+{% if perms.news.post_update %}
+<p class="text-normal fs-22">
+    <a href="{% url 'post_update' post.id %}" class="btn-secondary btn-sm">Редактировать</a></p>
+{% endif %}
+
+
+        {% endblock content %}

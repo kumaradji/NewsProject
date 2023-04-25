@@ -7,58 +7,38 @@
 
 {% block content %}
 
-<h1>НОВОСТИ на {% now %}</h1>
+<p></p>
+<p></p>
+<h3 class="text-normal fs-12">НОВОСТИ на {% now %}
+    <p<span class="text-muted fs-8 fw-normal">Всего: {{ page_obj.paginator.count }} </span></h3></p>
 
 {% if perms.news.add_post %}
-<button>
-    <a class="nav-link" href="{% url 'post_create' %}">
-        <h4><strong>Написать статью или новость</strong></h4>
-    </a>
-</button>
+<p class="text-center">
+    <a href="{% url 'post_create' %}" class="btn-secondary btn-sm">Написать статью или новость</a>
+</p>
+
 {% endif %}
 
 {% if not is_author %}
-<button>
-    <a class="nav-link" href="{% url 'account_upgrade' %}">
-        <h4><strong>Стать автором!</strong></h4>
-    </a>
-</button>
+<p class="text-center">
+    <a href="{% url 'account_upgrade' %}" class="btn-secondary btn-sm">Стать автором!</a>
+</p>
 {% endif %}
 
 {% if news %}
 
-<table cellpadding="14">
-    <tr class=title>
-        <th><b> &nbsp Заголовок &nbsp </b></th>
-        <th><b> &nbsp Дата публикации &nbsp </b></th>
-        <th><b> &nbsp Предпросмотр &nbsp </b></th>
-        <th><b> &nbsp Автор &nbsp </b></th>
+<ul class="list-group list-group-flush">
+    {% for c in news.all %}
+    <li class="list-group-item">
+        <h6 align="left"<small class="fw-bold">{{ c.dateCreation | date:'d M Y'}} </small>
+        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title }}</a></small>
+        <small class="text-muted">автор: {{ c.author }}</small> <br>
 
-        {% if perms.news.post_update or perms.news.post_delete %}
-        <th><b> &nbsp Действия &nbsp </b></th>
-        <th><b> &nbsp Действия &nbsp </b></th>
-        {% endif %}
-    </tr>
-    <hr>
-
-    {% for c in news %}
-    <tr>
-        <td>{{ c.title|censor }}</td>
-        <td>{{ c.dateCreation|date:'d.m.Y'}}</td>
-        <td>{{ c.preview|censor }}</td>
-        <td>{{ c.author }}</td>
-        {% if perms.news.post_delete %}
-        <td><a href="{% url 'post_delete' c.id %}">Удалить</a></td>
-        {% endif %}
-        &nbsp;
-        {% if perms.news.post_update %}
-        <td><a href="{% url 'post_update' c.id %}">Редактировать</a></td>
-        {% endif %}
-    <tr>
-        {% endfor %}
-    <tr>
-
-</table>
+        </small>
+        <p align="left">{{ c.text | truncatechars:210 }}</p>
+    </li>
+    {% endfor %}
+</ul>
 
 {% else %}
 <h2>Новостей нет!</h2>
