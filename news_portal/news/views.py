@@ -162,17 +162,13 @@ def upgrade_user(request):
     group = Group.objects.get(name='authors')
     if not user.groups.filter(name='authors').exists():
         group.user_set.add(user)
-        Author.objects.create(authorUser=User.objects.get(pk=user.id))
-    return redirect('/')
 
-
-@login_required
-def upgrade_user(request):
-    user = request.user
     group = Group.objects.get(name='newuser')
     if not user.groups.filter(name='newuser').exists():
         group.user_set.add(user)
+
         Author.objects.create(authorUser=User.objects.get(pk=user.id))
+
     return redirect('/')
 
 
