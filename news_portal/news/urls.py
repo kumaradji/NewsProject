@@ -3,6 +3,11 @@ from .views import (PostList, PostSearch, PostDetail, PostCreate,
                     PostUpdate, PostDelete, subscriptions, upgrade_user)
 from . import views
 
+
+class CategoruListView:
+    pass
+
+
 urlpatterns = [
 
     path('', PostList.as_view(), name='post_list'),
@@ -13,4 +18,5 @@ urlpatterns = [
     path('<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
     path('subscriptions/', subscriptions, name='subscriptions'),
     path('<int:post_id>/share/', views.post_share, name='post_share'),
+    path('categories/<int:pk>/', CategoruListView.as_view(), name='category_list'),
 ]

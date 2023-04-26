@@ -35,8 +35,7 @@
         <small class="text-muted">автор: {{ c.author }}</small> <br>
         <small class="fw-bold">категории:
             {% for category in news.postCategory.all %}
-            <a href="{% url 'post_list' post.id %}"</a>
-               {{ category.name }}
+            {{ category.name }}
             {% endfor %}
         </small>
         <p align="left">{{ c.text | truncatechars:210 }}</p>
