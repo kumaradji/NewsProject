@@ -8,14 +8,14 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .filters import PostFilter
 from .forms import PostForm, EmailPostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
 
 
-class PostList(ListView):
+class PostList(LoginRequiredMixin, ListView):
     model = Post
     # указываем способ сортировки
     ordering = '-dateCreation'
@@ -24,7 +24,7 @@ class PostList(ListView):
     # указываем переменную, которую будем использовать в
     # шаблоне news.html
     context_object_name = 'news'
-    paginate_by = 10
+    paginate_by = 6
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -39,7 +39,23 @@ class PostList(ListView):
         return context
 
 
-class PostSearch(ListView):
+# class CategoryListView(LoginRequiredMixin, ListView):
+#     model = Post
+#     template_name = 'news'
+#     context_object_name = 'category_news_list'
+#
+#     def get_queryset(self):
+#         self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+#         queryset = Post.objects.filter(category=self.category).order_by('-date')
+#         return queryset
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
+#         context['category'] = self.category
+
+
+class PostSearch(LoginRequiredMixin, ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = Post
     # Поле, которое будет использоваться для сортировки объектов
@@ -63,15 +79,15 @@ class PostSearch(ListView):
         return context
 
 
-class PostDetail(DetailView):
+class PostDetail(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'post_view.html'
-    slug_url_kwarg = 'post_slug'
+    raise_exception = True
     context_object_name = 'post'
 
 
 # Представление для создания новости
-class PostCreate(PermissionRequiredMixin, CreateView):
+class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     raise_exception = True
     permission_required = 'news.add_post'
     form_class = PostForm
@@ -88,18 +104,8 @@ class PostCreate(PermissionRequiredMixin, CreateView):
         return reverse('post', kwargs={'pk': self.object.pk})
 
 
-@login_required
-def upgrade_user(request):
-    user = request.user
-    group = Group.objects.get(name='authors')
-    if not user.groups.filter(name='authors').exists():
-        group.user_set.add(user)
-        Author.objects.create(authorUser=User.objects.get(pk=user.id))
-    return redirect('/')
-
-
 # Представление для изменения новости
-class PostUpdate(PermissionRequiredMixin, UpdateView):
+class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     raise_exception = True
     permission_required = ('news.post_edit',)
     form_class = PostForm
@@ -111,7 +117,7 @@ class PostUpdate(PermissionRequiredMixin, UpdateView):
 
 
 # Представление удаляющее новость
-class PostDelete(PermissionRequiredMixin, DeleteView):
+class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     raise_exception = True
     permission_required = ('news.post_delete',)
     model = Post
@@ -148,6 +154,26 @@ def subscriptions(request):
         'subscriptions.html',
         {'categories': categories_with_subscriptions},
     )
+
+
+@login_required
+def upgrade_user(request):
+    user = request.user
+    group = Group.objects.get(name='authors')
+    if not user.groups.filter(name='authors').exists():
+        group.user_set.add(user)
+        Author.objects.create(authorUser=User.objects.get(pk=user.id))
+    return redirect('/')
+
+
+@login_required
+def upgrade_user(request):
+    user = request.user
+    group = Group.objects.get(name='newuser')
+    if not user.groups.filter(name='newuser').exists():
+        group.user_set.add(user)
+        Author.objects.create(authorUser=User.objects.get(pk=user.id))
+    return redirect('/')
 
 
 def post_share(request, post_id):

@@ -33,7 +33,11 @@
         <h6 align="left"<small class="fw-bold">{{ c.dateCreation | date:'d M Y'}} </small>
         <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title }}</a></small>
         <small class="text-muted">автор: {{ c.author }}</small> <br>
-
+        <small class="fw-bold">категории:
+            {% for category in news.postCategory.all %}
+            <a href="{% url 'post_list' post.id %}"</a>
+               {{ category.name }}
+            {% endfor %}
         </small>
         <p align="left">{{ c.text | truncatechars:210 }}</p>
     </li>

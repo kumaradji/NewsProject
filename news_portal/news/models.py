@@ -31,6 +31,7 @@ class Author(models.Model):
 # Категории новостей/статей
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
+    subscribers: list[str] = []
 
     class Meta:
         verbose_name = 'Категория'
