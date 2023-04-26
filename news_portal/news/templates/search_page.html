@@ -14,29 +14,46 @@
 
 <hr>
 {% if search_page %}
-<table>
-    <thead>
-    <th><b> &nbsp Заголовок &nbsp </b></th>
-    <th><b> &nbsp Категория &nbsp </b></th>
-    <th><b> &nbsp Дата публикации &nbsp </b></th>
-    <th><b> &nbsp Краткое содержание &nbsp </b></th>
-    <thead>
+
+<ul class="list-group list-group-flush">
     {% for news in search_page %}
-    <tr>
-        <td>{{ news.title|censor }}</td>
-        <td>{% for category in news.postCategory.all %}
+    <li class="list-group-item">
+        <h6 align="left"<small class="text-muted">{{ news.dateCreation|date:'d.m.Y' }}</small> <br>
+        <h6 align="left"<small class="fw-bold">
+        <a href="{% url 'post' news.id %}">{{ news.title | censor }} </a></small> <br>
+        <tr>
+            <small class="fw-bold">категория:
+            {% for category in news.postCategory.all %}
             {{ category.name }}
             {% endfor %}
-        </td>
-        <td>{{ news.dateCreation|date:'d.m.Y' }}</td>
-        <td>{{ news.preview|censor }}</td>
-    </tr>
+            </small>
+            <p align="left">{{ news.text | truncatechars:210 }}</p>
+    </li>
     {% endfor %}
-</table>
-<br>
+</ul>
+
 
 {% else %}
 <h1>Новости не найдены</h1>
+{% endif %}
+
+{% if page_obj.has_previous %}
+{# Для каждой ссылки пагинации указываем обработку через новый тег #}
+<a href="?{% url_replace page=1 %}">1</a>
+{% if page_obj.previous_page_number != 1 %}
+...
+<a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
+{% endif %}
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+{% if paginator.num_pages != page_obj.next_page_number %}
+...
+<a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+{% endif %}
 {% endif %}
 
 {% endblock content %}
