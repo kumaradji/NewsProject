@@ -44,11 +44,13 @@ class CategoryListView(ListView):
     template_name = 'category_list.html'
     context_object_name = 'category_news_list'
 
+    # список статей конкретной категории
     def get_queryset(self):
         self.category = get_object_or_404(Category, id=self.kwargs['pk'])
-        queryset = Post.objects.filter(category=self.category).order_by('-date')
+        queryset = Post.objects.filter(category=self.category).order_by('-dateCreation')
         return queryset
 
+    # создаём кнопку подписаться, если ещё не подписан
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
@@ -121,42 +123,24 @@ class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     raise_exception = True
     permission_required = ('news.post_delete',)
+    queryset = Post.objects.all()
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
 
 
+# реализует подписаться или отписаться от категории
 @login_required
-@csrf_protect
-def subscriptions(request):
-    if request.method == 'POST':
-        category_id = request.POST.get('category_id')
-        category = Category.objects.get(id=category_id)
-        action = request.POST.get('action')
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
 
-        if action == 'subscribe':
-            Subscriber.objects.create(user=request.user, category=category)
-        elif action == 'unsubscribe':
-            Subscriber.objects.filter(
-                user=request.user,
-                category=category,
-            ).delete()
-
-    categories_with_subscriptions = Category.objects.annotate(
-        user_subscribed=Exists(
-            Subscriber.objects.filter(
-                user=request.user,
-                category=OuterRef('pk'),
-            )
-        )
-    ).order_by('name')
-    return render(
-        request,
-        'subscriptions.html',
-        {'categories': categories_with_subscriptions},
-    )
+    message = "Вы успешно подписались на рассылку новостей категории"
+    return render(request, 'news/subscribe.html', {'category': category, 'message': message})
 
 
+# при добавлении нового пользователя в группу авторы или в newuser
 @login_required
 def upgrade_user(request):
     user = request.user
@@ -168,27 +152,6 @@ def upgrade_user(request):
     if not user.groups.filter(name='newuser').exists():
         group.user_set.add(user)
 
-        Author.objects.create(authorUser=User.objects.get(pk=user.id))
+    Author.objects.create(authorUser=User.objects.get(pk=user.id))
 
     return redirect('/')
-
-
-def post_share(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    sent = False
-
-    if request.method == 'POST':
-        form = EmailPostForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f"{cd['name']} recommends you read " \
-                      f"{post.title}"
-            message = f"Read {post.title} at {post_url}\n\n" \
-                      f"{cd['name']}\'s comments: {cd['comments']}"
-            send_mail(subject, message, 'kumaradji@yandex.ru', [cd['to']])
-            sent = True
-
-    else:
-        form = PostForm()
-    return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})

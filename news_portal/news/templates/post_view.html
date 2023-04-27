@@ -8,12 +8,12 @@
 {% endblock title %}
 
 {% block content %}
-<h2>новость № {{ post.id }}</h2>
+<h4 align="left"<small class="fw-bold">новость № {{ post.id }}</h4>
 
 <h1>{{ post.title|censor }}</h1>
 <h4>дата публикации {{ post.dateCreation|date:'d.m.Y' }}</h4>
-<p>{{ post.text|censor }}</p>
-<h5>автор: {{ post.author }}</h5>
+    <p><h5 align="left"<small class="fw-bold">{{ post.text|censor }}</small></p>
+<h5 align="right"автор: {{ post.author }}</h5>
 
 {% if perms.news.post_delete %}
 <p class="text-normal fs-12">

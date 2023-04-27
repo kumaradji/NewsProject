@@ -31,7 +31,7 @@ class Author(models.Model):
 # Категории новостей/статей
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    subscribers = models.ManyToManyField(User, related_name='çategories')
+    subscribers = models.ManyToManyField(User, related_name='categories', through='Subscriber')
 
     class Meta:
         verbose_name = 'Категория'
@@ -81,14 +81,13 @@ class Post(models.Model):
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    related_name = 'post_cat'
 
     class Meta:
         verbose_name = 'Категория новости'
         verbose_name_plural = 'Категории новостей'
 
     def __str__(self):
-        return f'{self.post} ({self.category})'
+        return f'{self.post.title} ({self.category.name})'
 
 
 class Comment(models.Model):

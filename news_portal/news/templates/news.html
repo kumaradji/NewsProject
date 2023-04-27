@@ -35,6 +35,7 @@
         <small class="text-muted">автор: {{ c.author }}</small> <br>
         <small class="fw-bold">категории:
             {% for category in c.postCategory.all %}
+<!--          <a href="{% url 'post' category.id %}">-->
             {{ category.name }}
             {% endfor %}
         </small>
