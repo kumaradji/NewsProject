@@ -1,12 +1,10 @@
-from django.contrib.auth.models import User, Group
 from django.core.mail import EmailMultiAlternatives
-from django.db.models.signals import post_save, m2m_changed
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 
 from news_portal import settings
-from .models import PostCategory, Category, Post
-from .views import PostCreate
+from .models import PostCategory
 
 
 def send_notifications(preview, pk, title, subscribers):
@@ -29,18 +27,21 @@ def send_notifications(preview, pk, title, subscribers):
     msg.send()
 
 
-@receiver(m2m_changed, sender=Category)
+# создаём рассылку по почте когда статье присваивается категория
+@receiver(m2m_changed, sender=PostCategory)
 def notify_about_new_post(sender, instance, **kwargs):
+    # только если статья создалась
     if kwargs['action'] == 'post_add':
         categories = instance.category.all()
+        # список подписчиков на категорию модели User
         subscribers: list[str] = []
         for category in categories:
+            # добавляем в список подписчиков категории
             subscribers += category.subscribers.all()
 
         subscribers = [s.email for s in subscribers]
 
         send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
-#
 
 # @receiver(post_save, sender=PostCreate)
 # def add_user_to_group(sender, instance, created, **kwargs):

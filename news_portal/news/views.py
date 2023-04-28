@@ -58,6 +58,17 @@ class CategoryListView(ListView):
         return context
 
 
+# реализует подписаться или отписаться от категории
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+
+    message = "Вы успешно подписались на рассылку новостей категории"
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
+
+
 class PostSearch(LoginRequiredMixin, ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = Post
@@ -127,17 +138,6 @@ class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
-
-
-# реализует подписаться или отписаться от категории
-@login_required
-def subscribe(request, pk):
-    user = request.user
-    category = Category.objects.get(id=pk)
-    category.subscribers.add(user)
-
-    message = "Вы успешно подписались на рассылку новостей категории"
-    return render(request, 'news/subscribe.html', {'category': category, 'message': message})
 
 
 # при добавлении нового пользователя в группу авторы или в newuser

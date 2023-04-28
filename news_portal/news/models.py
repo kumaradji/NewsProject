@@ -54,7 +54,7 @@ class Post(models.Model):
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=255)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
     added_at = models.DateTimeField(auto_now=True, )
@@ -64,7 +64,7 @@ class Post(models.Model):
         verbose_name_plural = 'Новости'
 
     def preview(self):
-        return self.text[0:20] + '...'
+        return self.text[0:120] + '...'
 
     def like(self):
         self.rating += 1

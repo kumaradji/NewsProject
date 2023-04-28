@@ -21,20 +21,23 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 # хранит количество дней, когда доступна ссылка на подтверждение регистрации
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 10
+
 # Настройки почты отправляется на консоль
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Настройки почты отправляется на реальный почтовый ящик
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "kumaradji@yandex.ru"
-EMAIL_HOST_PASSWORD = "tltiblvgbecfzhds"
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
 
-DEFAULT_FROM_EMAIL = "kumaradji@yandex.ru"
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = "kumaradji@yandex.ru"
 ADMINS = (
     ('Кумар', 'kumaradji@me.com'),
