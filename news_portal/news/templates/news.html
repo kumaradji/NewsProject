@@ -31,13 +31,13 @@
     {% for c in news.all %}
     <li class="list-group-item">
         <h6 align="left"<small class="fw-bold">{{ c.dateCreation | date:'d M Y'}} </small>
-        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor  }}</a></small>
+        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small>
         <small class="text-muted">автор: {{ c.author }}</small> <br>
         <small class="fw-bold">категории:
-            {% for category in c.postCategory.all %}
-<!--            <a href="{% url 'post' category.id %}">-->
-            {{ category.name }}
-            {% endfor %}
+            {% for category in c.category.all %}
+            <a href="{% url 'category_list' category.id %}">
+                {{ category.name }}
+                {% endfor %}
 
         </small>
         <p align="left">{{ c.text | truncatechars:210 }}</p>

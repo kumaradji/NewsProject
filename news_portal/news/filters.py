@@ -10,7 +10,7 @@ class PostFilter(FilterSet):
         label='Заголовок'
     )
     add_category = ModelChoiceFilter(
-        field_name='postCategory',
+        field_name='category',
         queryset=Category.objects.all(),
         label='Категория поста',
         empty_label='Select a category'

@@ -23,7 +23,7 @@
         <a href="{% url 'post' news.id %}">{{ news.title | censor }} </a></small> <br>
         <tr>
             <small class="fw-bold">категория:
-            {% for category in news.postCategory.all %}
+            {% for category in news.category.all %}
             {{ category.name }}
             {% endfor %}
             </small>
