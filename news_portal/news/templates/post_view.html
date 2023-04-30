@@ -10,7 +10,7 @@
 <p></p>
 <p></p>
 <h3>{{ post.title|censor }}</h3>
-<h4>дата публикации: {{ post.dateCreation|date:'d.m.Y' }} года</h4>
+<h4>дата публикации: {{ post.date|date:'d.m.Y' }} года</h4>
     <p><h5 align="left"<small class="text">{{ post.text|censor }}</small></h5>
     <hr>
     <p><h5 align="left"<small class="text">автор: {{ post.author }}</small></h5>

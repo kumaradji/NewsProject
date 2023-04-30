@@ -18,7 +18,7 @@
 <ul class="list-group list-group-flush">
     {% for news in search_page %}
     <li class="list-group-item">
-        <h6 align="left"<small class="text-muted">{{ news.dateCreation|date:'d.m.Y' }}</small> <br>
+        <h6 align="left"<small class="text-muted">{{ news.date|date:'d.m.Y' }}</small> <br>
         <h6 align="left"<small class="fw-bold">
         <a href="{% url 'post' news.id %}">{{ news.title | censor }} </a></small> <br>
         <tr>

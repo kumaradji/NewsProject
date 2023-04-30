@@ -11,11 +11,27 @@
 <p></p>
 <p></p>
 
-    <p><h3 class="text-normal fs-12">Все новости в категории: {{ category.name }} </span></p></h3>
+<p><h3 class="text-normal fs-12">Все новости в категории: {{ category.name }} </p></h3>
 
 {% if is_not_subscriber %}
-    <p class="text-center"><a href="{% url 'subscribe' category.id%}" class="btn btn-secondary btn-sm">Подписаться</a></p>
+<p class="text-center"><a href="{% url 'subscribe' category.id  %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
 {% endif %}
+
+{#### context_object_name = 'category_news_list' #####}
+
+<!--<form method="post">-->
+<!--        {% csrf_token %}-->
+<!--        <input type="hidden" name="category_id" value="{{ category.id }}" />-->
+
+<!--        {% if category.user_subscribed %}-->
+<!--            <button disabled>Подписаться</button>-->
+<!--            <button name="action" value="unsubscribe">Отписаться</button>-->
+<!--        {% else %}-->
+<!--            <button name="action" value="subscribe">Подписаться</button>-->
+<!--            <button disabled>Отписаться</button>-->
+<!--        {% endif %}-->
+<!--    </form>-->
+<!--</p>-->
 
 
 {% if perms.news.add_post %}
@@ -29,7 +45,7 @@
 <ul class="list-group list-group-flush">
     {% for c in category_news_list %}
     <li class="list-group-item">
-        <h6 align="left"<small class="fw-bold">{{ c.dateCreation | date:'d M Y'}} года</small> </h6>
+        <h6 align="left"<small class="fw-bold">{{ c.date | date:'d M Y'}} года</small> </h6>
         <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small>
         <h6 align="left"<small class="fw-bold">автор: {{ c.author }}</small> <br>
 
@@ -43,7 +59,7 @@
 {% endif %}
 
 {% if page_obj.has_previous %}
-{# Для каждой ссылки пагинации указываем обработку через новый тег #}
+
 <a href="?{% url_replace page=1 %}">1</a>
 {% if page_obj.previous_page_number != 1 %}
 ...

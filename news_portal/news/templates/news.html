@@ -31,7 +31,7 @@
 <ul class="list-group list-group-flush">
     {% for c in news.all %}
     <li class="list-group-item">
-        <h6 align="left"<small class="fw-bold">{{ c.dateCreation | date:'d M Y'}} года</small></h6>
+        <h6 align="left"<small class="fw-bold">{{ c.date | date:'d M Y'}} года</small></h6>
         <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small></h6>
         <h6 align="left"<small class="fw-bold">автор: {{ c.author }}</small> <br></h6>
         <h6 align="left"<small class="text-muted">категории:</small>

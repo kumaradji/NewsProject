@@ -31,7 +31,7 @@ class Author(models.Model):
 # Категории новостей/статей
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    subscribers = models.ManyToManyField(User, related_name='categories', through='Subscriber')
+    subscribers = models.ManyToManyField(User, blank=True, related_name='categories', through='Subscriber')
 
     class Meta:
         verbose_name = 'Категория'
@@ -52,12 +52,11 @@ class Post(models.Model):
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
-    dateCreation = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=255)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
-    added_at = models.DateTimeField(auto_now=True, )
 
     class Meta:
         verbose_name = 'Новость'
@@ -75,7 +74,10 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.title}: {self.text[:25]}'
+        return f'{self.title}: {self.author}'
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):

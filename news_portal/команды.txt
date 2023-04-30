@@ -83,7 +83,7 @@ print(f'Автор: {a.authorUser}, рейтинг: {a.ratingAuthor}')
 
 p = Post.objects.filter().order_by('-rating')[0]
 
-print(f'Дата: {p.dateCreation}, Автор: {p.author.authorUser}, Рейтинг: {p.rating}, Заголовок: {p.title}, Превью: {p.preview()}')
+print(f'Дата: {p.date}, Автор: {p.author.authorUser}, Рейтинг: {p.rating}, Заголовок: {p.title}, Превью: {p.preview()}')
 
 for c in Comment.objects.filter(post_id=p.id):
     print(f'Дата: {c.created}, Автор: {c.user}, Рейтинг: {c.rating}, Текст: {c.text}\r\n')

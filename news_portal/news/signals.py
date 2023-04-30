@@ -1,10 +1,12 @@
+from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMultiAlternatives
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 
 from news_portal import settings
 from .models import PostCategory
+from .views import PostCreate
 
 
 def send_notifications(preview, pk, title, subscribers):
@@ -43,6 +45,7 @@ def notify_about_new_post(sender, instance, **kwargs):
 
         send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
 
+
 # @receiver(post_save, sender=PostCreate)
 # def add_user_to_group(sender, instance, created, **kwargs):
 #     if created:
@@ -59,7 +62,7 @@ def notify_about_new_post(sender, instance, **kwargs):
 #         return
 #     emails = User.objects.filter(
 #         subscriptions__category=instance.id).values_list('email', flat=True)
-#     subject = f'Новая публикация в категории {instance.postCategory}'
+#     subject = f'Новая публикация в категории {instance.category}'
 #
 #     text_content = (
 #         f'Публикация: {instance.author}\n'

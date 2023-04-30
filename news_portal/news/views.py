@@ -18,7 +18,7 @@ from django.urls import reverse_lazy, reverse
 class PostList(LoginRequiredMixin, ListView):
     model = Post
     # указываем способ сортировки
-    ordering = '-dateCreation'
+    ordering = '-date'
     # указываем шаблон представления
     template_name = 'news.html'
     # указываем переменную, которую будем использовать в
@@ -33,32 +33,35 @@ class PostList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
+        # context['filterset'] = self.filterset
         context['time_now'] = datetime.utcnow()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         return context
 
 
-class CategoryListView(ListView):
+class CategoryListView(PostList):
     model = Post
     template_name = 'category_list.html'
     context_object_name = 'category_news_list'
+    ordering = '-date'
+    paginate_by = 3
 
     # список статей конкретной категории
     def get_queryset(self):
         self.category = get_object_or_404(Category, id=self.kwargs['pk'])
-        queryset = Post.objects.filter(category=self.category).order_by('-dateCreation')
+        queryset = Post.objects.filter(category=self.category).order_by('-date')
         return queryset
 
     # создаём кнопку подписаться, если ещё не подписан
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
+        # context['is_subscriber'] = self.request.user in self.category.subscribers.all()
         context['category'] = self.category
         return context
 
 
-# реализует подписаться или отписаться от категории
+# реализует страницу подписки на категорию
 @login_required
 def subscribe(request, pk):
     user = request.user
@@ -69,11 +72,42 @@ def subscribe(request, pk):
     return render(request, 'subscribe.html', {'category': category, 'message': message})
 
 
+@login_required
+@csrf_protect
+def subscriptions(request):
+    if request.method == 'POST':
+        category_id = request.POST.get('category_id')
+        category = Category.objects.get(id=category_id)
+        action = request.POST.get('action')
+
+        if action == 'subscribe':
+            Subscriber.objects.create(user=request.user, category=category)
+        elif action == 'unsubscribe':
+            Subscriber.objects.filter(
+                user=request.user,
+                category=category,
+            ).delete()
+
+    categories_with_subscriptions = Category.objects.annotate(
+        user_subscribed=Exists(
+            Subscriber.objects.filter(
+                user=request.user,
+                category=OuterRef('pk'),
+            )
+        )
+    ).order_by('name')
+    return render(
+        request,
+        'subscriptions.html',
+        {'categories': categories_with_subscriptions},
+    )
+
+
 class PostSearch(LoginRequiredMixin, ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = Post
     # Поле, которое будет использоваться для сортировки объектов
-    ordering = '-dateCreation'
+    ordering = '-date'
     # Указываем имя шаблона, в котором будут все инструкции о том,
     # как именно пользователю должны быть показаны наши объекты
     template_name = 'search_page.html'
@@ -140,7 +174,7 @@ class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('post_list')
 
 
-# при добавлении нового пользователя в группу авторы или в newuser
+# при добавлении нового пользователя в группу авторы или в 'newuser'
 @login_required
 def upgrade_user(request):
     user = request.user
