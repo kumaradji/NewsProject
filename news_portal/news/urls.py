@@ -15,6 +15,8 @@ urlpatterns = [
     path('categories/<int:pk>/', CategoryListView.as_view(), name='category_list'),
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
     path('upgrade/', upgrade_user, name='account_upgrade'),
+    path('subscriptions/', subscriptions, name='subscriptions'),
+
     # path('categories/<int:pk>/subscribe', subscriptions, name='subscriptions'),
 
     # path('<int:post_id>/share/', views.post_share, name='post_share'),

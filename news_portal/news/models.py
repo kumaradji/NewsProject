@@ -112,7 +112,7 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.user.username} про "{self.post}"'
+        return f'{self.user} про "{self.post}"'
 
 
 class Subscriber(models.Model):
@@ -128,4 +128,4 @@ class Subscriber(models.Model):
     )
 
     def __str__(self):
-        return f'{self.user.username} подписан на {self.category}'
+        return f'{self.user} подписан на {self.category}'
