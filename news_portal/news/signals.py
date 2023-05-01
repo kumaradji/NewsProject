@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 
 from news_portal import settings
-from .models import PostCategory
+from .models import PostCategory, Subscriber
 from .views import PostCreate
 
 
@@ -46,36 +46,27 @@ def notify_about_new_post(sender, instance, **kwargs):
         send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
 
 
-# @receiver(post_save, sender=PostCreate)
-# def add_user_to_group(sender, instance, created, **kwargs):
-#     if created:
-#         group = Group.objects.get(name='newuser')
-#         instance.groups.add(group)
-#     else:
-#         return
-#
-#
-# @receiver(post_save, sender=PostCreate)
-# def news_created(instance, created, **kwargs):
-#     print('создан пост СИГНАЛ')
-#     if not created:
-#         return
-#     emails = User.objects.filter(
-#         subscriptions__category=instance.id).values_list('email', flat=True)
-#     subject = f'Новая публикация в категории {instance.category}'
-#
-#     text_content = (
-#         f'Публикация: {instance.author}\n'
-#         f'Тема: {instance.text}\n\n'
-#         f'Ссылка на публикацию: http://127.0.0.1{instance.get_success_url()}'
-#     )
-#     html_content = (
-#         f'Публикация: {instance.author}<br>'
-#         f'Тема: {instance.text}<br><br>'
-#         f'<a href="http://127.0.0.1{instance.get_success_url()}">'
-#         f'Ссылка на публикацию</a>'
-#     )
-#     for email in emails:
-#         msg = EmailMultiAlternatives(subject, text_content, None, [email])
-#         msg.attach_alternative(html_content, "text/html")
-#         msg.send()
+# создаём рассылку по почте когда создается новая публикация
+@receiver(post_save, sender=PostCreate)
+def news_created(instance, created, **kwargs):
+    if not created:
+        return
+    emails = User.objects.filter(
+        subscriptions__category=instance.id).values_list('email', flat=True)
+    subject = f'Новая публикация в категории {instance.category}'
+
+    text_content = (
+        f'Публикация: {instance.author}\n'
+        f'Тема: {instance.text}\n\n'
+        f'Ссылка на публикацию: http://127.0.0.1{instance.get_success_url()}'
+    )
+    html_content = (
+        f'Публикация: {instance.author}<br>'
+        f'Тема: {instance.text}<br><br>'
+        f'<a href="http://127.0.0.1{instance.get_success_url()}">'
+        f'Ссылка на публикацию</a>'
+    )
+    for email in emails:
+        msg = EmailMultiAlternatives(subject, text_content, None, [email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()

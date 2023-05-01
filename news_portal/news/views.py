@@ -1,5 +1,4 @@
 from datetime import datetime
-from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
@@ -10,7 +9,7 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .filters import PostFilter
-from .forms import PostForm, EmailPostForm
+from .forms import PostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
 
@@ -33,7 +32,6 @@ class PostList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['filterset'] = self.filterset
         context['time_now'] = datetime.utcnow()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         return context
@@ -174,16 +172,12 @@ class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('post_list')
 
 
-# при добавлении нового пользователя в группу авторы или в 'newuser'
+# при добавлении нового пользователя в группу авторы
 @login_required
 def upgrade_user(request):
     user = request.user
     group = Group.objects.get(name='authors')
     if not user.groups.filter(name='authors').exists():
-        group.user_set.add(user)
-
-    group = Group.objects.get(name='newuser')
-    if not user.groups.filter(name='newuser').exists():
         group.user_set.add(user)
 
     Author.objects.create(authorUser=User.objects.get(pk=user.id))

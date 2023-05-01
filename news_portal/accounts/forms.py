@@ -1,6 +1,7 @@
 from allauth.account.forms import SignupForm
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.core.mail import mail_managers, mail_admins
+from django.contrib.auth.models import Group
 
 
 class CustomSignupForm(SignupForm):
@@ -19,10 +20,10 @@ class CustomSignupForm(SignupForm):
         msg.attach_alternative(html, "text/html")
         msg.send()
 
-        mail_managers(
-            subject='Новый пользователь!',
-            message=f'Пользователь {user.username} зарегистрировался на сайте.'
-        )
+        # mail_managers(
+        #     subject='Новый пользователь!',
+        #     message=f'Пользователь {user.username} зарегистрировался на сайте.'
+        # )
 
         mail_admins(
             subject='Новый пользователь!',

@@ -9,7 +9,7 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = "/news"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"
-# ACCOUNT_FORMS = {'signup': 'news.forms.BasicSignupForm'}
+ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 
 APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
@@ -23,7 +23,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # но пользователь может залогиниться на сайте без подтверждения почты
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 # Указали форму для дополнительной обработки регистрации пользователя
-# ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 # позволит избежать дополнительного входа
 # и активирует аккаунт сразу, как только мы перейдём по ссылке
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
