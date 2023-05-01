@@ -6,6 +6,14 @@ SECRET_KEY = 'django-insecure-7&7zcad^v^)+=!p-tfekn9i79a!6!60(l9ss1aoxu5(ke&)(av
 DEBUG = True
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = "/news"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"
+ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
+
+APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -15,7 +23,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # но пользователь может залогиниться на сайте без подтверждения почты
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 # Указали форму для дополнительной обработки регистрации пользователя
-# ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 # позволит избежать дополнительного входа
 # и активирует аккаунт сразу, как только мы перейдём по ссылке
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
@@ -25,16 +32,17 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Настройки почты отправляется на реальный почтовый ящик
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "kumaradji@yandex.ru"
-EMAIL_HOST_PASSWORD = "tltiblvgbecfzhds"
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
 
-DEFAULT_FROM_EMAIL = "kumaradji@yandex.ru"
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = "kumaradji@yandex.ru"
 ADMINS = (
     ('Кумар', 'kumaradji@me.com'),
@@ -63,7 +71,6 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 SITE_URL = 'http://127.0.0.1:8000'
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -125,14 +132,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'ru'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
+
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
-
-LOGIN_REDIRECT_URL = "/news"

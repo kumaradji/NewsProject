@@ -31,6 +31,7 @@ class Author(models.Model):
 # Категории новостей/статей
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
+    subscribers = models.ManyToManyField(User, blank=True, related_name='categories', through='Subscriber')
 
     class Meta:
         verbose_name = 'Категория'
@@ -51,19 +52,18 @@ class Post(models.Model):
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
-    dateCreation = models.DateTimeField(auto_now_add=True)
-    postCategory = models.ManyToManyField(Category, through='PostCategory')
-    title = models.CharField(max_length=64)
+    date = models.DateTimeField(auto_now_add=True)
+    category = models.ManyToManyField(Category, through='PostCategory')
+    title = models.CharField(max_length=255)
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
-    added_at = models.DateTimeField(auto_now=True, )
 
     class Meta:
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
 
     def preview(self):
-        return self.text[0:20] + '...'
+        return self.text[0:120] + '...'
 
     def like(self):
         self.rating += 1
@@ -74,20 +74,22 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return f'{self.title}: {self.text[:25]}'
+        return f'{self.title}: {self.author}'
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    related_name = 'post_cat'
 
     class Meta:
         verbose_name = 'Категория новости'
         verbose_name_plural = 'Категории новостей'
 
     def __str__(self):
-        return f'{self.post} ({self.category})'
+        return f'{self.post.title} ({self.category.name})'
 
 
 class Comment(models.Model):
@@ -127,3 +129,5 @@ class Subscriber(models.Model):
 
     def __str__(self):
         return f'{self.user.username} подписан на {self.category}'
+
+

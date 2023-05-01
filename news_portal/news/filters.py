@@ -10,13 +10,13 @@ class PostFilter(FilterSet):
         label='Заголовок'
     )
     add_category = ModelChoiceFilter(
-        field_name='postCategory',
+        field_name='category',
         queryset=Category.objects.all(),
         label='Категория поста',
         empty_label='Select a category'
     )
     add_date = DateTimeFilter(
-        field_name='dateCreation',
+        field_name='date',
         lookup_expr='gt',
         label='Дата публикации',
         widget=DateTimeInput(

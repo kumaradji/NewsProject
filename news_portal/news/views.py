@@ -1,5 +1,4 @@
 from datetime import datetime
-from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
@@ -8,23 +7,23 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .filters import PostFilter
-from .forms import PostForm, EmailPostForm
+from .forms import PostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
 
 
-class PostList(ListView):
+class PostList(LoginRequiredMixin, ListView):
     model = Post
     # указываем способ сортировки
-    ordering = '-dateCreation'
+    ordering = '-date'
     # указываем шаблон представления
     template_name = 'news.html'
     # указываем переменную, которую будем использовать в
     # шаблоне news.html
     context_object_name = 'news'
-    paginate_by = 10
+    paginate_by = 6
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -33,90 +32,42 @@ class PostList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
         context['time_now'] = datetime.utcnow()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         return context
 
 
-class PostSearch(ListView):
-    # Указываем модель, объекты которой мы будем выводить
+class CategoryListView(PostList):
     model = Post
-    # Поле, которое будет использоваться для сортировки объектов
-    ordering = '-dateCreation'
-    # Указываем имя шаблона, в котором будут все инструкции о том,
-    # как именно пользователю должны быть показаны наши объекты
-    template_name = 'search_page.html'
-    # Это имя списка, в котором будут лежать все объекты.
-    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
-    context_object_name = 'search_page'
-    paginate_by = 5
+    template_name = 'category_list.html'
+    context_object_name = 'category_news_list'
+    ordering = '-date'
+    paginate_by = 3
 
+    # список статей конкретной категории
     def get_queryset(self):
-        queryset = super().get_queryset()
-        self.filterset = PostFilter(self.request.GET, queryset)
-        return self.filterset.qs
+        self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(category=self.category).order_by('-date')
+        return queryset
 
+    # создаём кнопку подписаться, если ещё не подписан
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
+        context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
+        # context['is_subscriber'] = self.request.user in self.category.subscribers.all()
+        context['category'] = self.category
         return context
 
 
-class PostDetail(DetailView):
-    model = Post
-    template_name = 'post_view.html'
-    slug_url_kwarg = 'post_slug'
-    context_object_name = 'post'
-
-
-# Представление для создания новости
-class PostCreate(PermissionRequiredMixin, CreateView):
-    raise_exception = True
-    permission_required = 'news.add_post'
-    form_class = PostForm
-    model = Post
-    template_name = 'create_post.html'
-
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.is_news = True
-        post.author = self.request.user.author
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('post', kwargs={'pk': self.object.pk})
-
-
+# реализует страницу подписки на категорию
 @login_required
-def upgrade_user(request):
+def subscribe(request, pk):
     user = request.user
-    group = Group.objects.get(name='authors')
-    if not user.groups.filter(name='authors').exists():
-        group.user_set.add(user)
-        Author.objects.create(authorUser=User.objects.get(pk=user.id))
-    return redirect('/')
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
 
-
-# Представление для изменения новости
-class PostUpdate(PermissionRequiredMixin, UpdateView):
-    raise_exception = True
-    permission_required = ('news.post_edit',)
-    form_class = PostForm
-    model = Post
-    template_name = 'post_edit.html'
-
-    def get_success_url(self):
-        return reverse('post', kwargs={'pk': self.object.pk})
-
-
-# Представление удаляющее новость
-class PostDelete(PermissionRequiredMixin, DeleteView):
-    raise_exception = True
-    permission_required = ('news.post_delete',)
-    model = Post
-    template_name = 'post_delete.html'
-    success_url = reverse_lazy('post_list')
+    message = "Вы успешно подписались на рассылку новостей категории"
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
 
 
 @login_required
@@ -150,22 +101,85 @@ def subscriptions(request):
     )
 
 
-def post_share(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    sent = False
+class PostSearch(LoginRequiredMixin, ListView):
+    # Указываем модель, объекты которой мы будем выводить
+    model = Post
+    # Поле, которое будет использоваться для сортировки объектов
+    ordering = '-date'
+    # Указываем имя шаблона, в котором будут все инструкции о том,
+    # как именно пользователю должны быть показаны наши объекты
+    template_name = 'search_page.html'
+    # Это имя списка, в котором будут лежать все объекты.
+    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
+    context_object_name = 'search_page'
+    paginate_by = 5
 
-    if request.method == 'POST':
-        form = EmailPostForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f"{cd['name']} recommends you read " \
-                      f"{post.title}"
-            message = f"Read {post.title} at {post_url}\n\n" \
-                      f"{cd['name']}\'s comments: {cd['comments']}"
-            send_mail(subject, message, 'kumaradji@yandex.ru', [cd['to']])
-            sent = True
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
 
-    else:
-        form = PostForm()
-    return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+
+class PostDetail(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = 'post_view.html'
+    raise_exception = True
+    context_object_name = 'post'
+
+
+# Представление для создания новости
+class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    raise_exception = True
+    permission_required = 'news.add_post'
+    form_class = PostForm
+    model = Post
+    template_name = 'create_post.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.is_news = True
+        post.author = self.request.user.author
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('post', kwargs={'pk': self.object.pk})
+
+
+# Представление для изменения новости
+class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    raise_exception = True
+    permission_required = ('news.post_edit',)
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
+
+    def get_success_url(self):
+        return reverse('post', kwargs={'pk': self.object.pk})
+
+
+# Представление удаляющее новость
+class PostDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    raise_exception = True
+    permission_required = ('news.post_delete',)
+    queryset = Post.objects.all()
+    model = Post
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('post_list')
+
+
+# при добавлении нового пользователя в группу авторы
+@login_required
+def upgrade_user(request):
+    user = request.user
+    group = Group.objects.get(name='authors')
+    if not user.groups.filter(name='authors').exists():
+        group.user_set.add(user)
+
+    Author.objects.create(authorUser=User.objects.get(pk=user.id))
+
+    return redirect('/')

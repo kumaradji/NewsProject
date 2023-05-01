@@ -5,5 +5,5 @@ from .views import SignUp
 
 urlpatterns = [
     path('', include('allauth.urls')),
-    path('upgrade/', upgrade_user, name='account_upgrade'),
+    # path('upgrade/', upgrade_user, name='account_upgrade'),
 ]

@@ -1,6 +1,7 @@
 {% extends 'default.html' %}
 {% load custom_filters %}
 {% load custom_tags %}
+
 {% block title %}
 НОВОСТИ
 {% endblock title %}
@@ -10,7 +11,7 @@
 <p></p>
 <p></p>
 <h3 class="text-normal fs-12">НОВОСТИ на {% now %}
-    <p<span class="text-muted fs-8 fw-normal">Всего: {{ page_obj.paginator.count }} </span></h3></p>
+    <p><span class="text-muted fs-8 fw-normal">Всего: {{ page_obj.paginator.count }} </span></p></h3>
 
 {% if perms.news.add_post %}
 <p class="text-center">
@@ -30,12 +31,18 @@
 <ul class="list-group list-group-flush">
     {% for c in news.all %}
     <li class="list-group-item">
-        <h6 align="left"<small class="fw-bold">{{ c.dateCreation | date:'d M Y'}} </small>
-        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title }}</a></small>
-        <small class="text-muted">автор: {{ c.author }}</small> <br>
+        <h6 align="left"<small class="fw-bold">{{ c.date | date:'d M Y'}} года</small></h6>
+        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small></h6>
+        <h6 align="left"<small class="fw-bold">автор: {{ c.author }}</small> <br></h6>
+        <h6 align="left"<small class="text-muted">категории:</small>
+            {% for category in c.category.all %}
+            <a href="{% url 'category_list' category.id %}">
+                {{ category.name }}
+            </a>
+            {% endfor %}
 
-        </small>
-        <p align="left">{{ c.text | truncatechars:210 }}</p>
+
+        <h6 align="left"<small class="fw-bold">{{ c.text | truncatechars:210 }}</p>
     </li>
     {% endfor %}
 </ul>
@@ -45,7 +52,6 @@
 {% endif %}
 
 {% if page_obj.has_previous %}
-{# Для каждой ссылки пагинации указываем обработку через новый тег #}
 <a href="?{% url_replace page=1 %}">1</a>
 {% if page_obj.previous_page_number != 1 %}
 ...
