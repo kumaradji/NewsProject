@@ -14,6 +14,19 @@ ACCOUNT_FORMS = {'signup': 'accounts.forms.CustomSignupForm'}
 APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+#
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+#     }
+# }
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -33,17 +46,20 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Настройки почты отправляется на реальный почтовый ящик
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+# хост почтового сервера
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# логин почтового сервера
+EMAIL_HOST_USER = 'Ku79313081435@yandex.ru'
+# пароль пользователя почтового сервера
+EMAIL_HOST_PASSWORD = 'mcoiviutbawsxidk'
+DEFAULT_FROM_EMAIL = 'Ku79313081435@yandex.ru'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
+SERVER_EMAIL = "Ku79313081435@yandex.ru"
+EMAIL_SUBJECT_PREFIX = 'NewsPortal_kumaradji'
 
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
-SERVER_EMAIL = "kumaradji@yandex.ru"
 ADMINS = (
     ('Кумар', 'kumaradji@me.com'),
 )
@@ -75,13 +91,15 @@ SITE_URL = 'http://127.0.0.1:8000'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
+    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'news_portal.urls'
@@ -134,7 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
-USE_TZ = True
+USE_TZ = False  # ставим False, чтобы совпадало время часового пояса
 
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

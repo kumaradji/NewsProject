@@ -17,23 +17,6 @@
 <p class="text-center"><a href="{% url 'subscribe' category.id  %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
 {% endif %}
 
-{#### context_object_name = 'category_news_list' #####}
-
-<!--<form method="post">-->
-<!--        {% csrf_token %}-->
-<!--        <input type="hidden" name="category_id" value="{{ category.id }}" />-->
-
-<!--        {% if category.user_subscribed %}-->
-<!--            <button disabled>Подписаться</button>-->
-<!--            <button name="action" value="unsubscribe">Отписаться</button>-->
-<!--        {% else %}-->
-<!--            <button name="action" value="subscribe">Подписаться</button>-->
-<!--            <button disabled>Отписаться</button>-->
-<!--        {% endif %}-->
-<!--    </form>-->
-<!--</p>-->
-
-
 {% if perms.news.add_post %}
 <p class="text-center">
     <a href="{% url 'post_create' %}" class="btn-secondary btn-sm">Написать статью или новость</a>

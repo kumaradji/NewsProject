@@ -59,48 +59,6 @@ class CategoryListView(PostList):
         return context
 
 
-# реализует страницу подписки на категорию
-@login_required
-def subscribe(request, pk):
-    user = request.user
-    category = Category.objects.get(id=pk)
-    category.subscribers.add(user)
-
-    message = "Вы успешно подписались на рассылку новостей категории"
-    return render(request, 'subscribe.html', {'category': category, 'message': message})
-
-
-@login_required
-@csrf_protect
-def subscriptions(request):
-    if request.method == 'POST':
-        category_id = request.POST.get('category_id')
-        category = Category.objects.get(id=category_id)
-        action = request.POST.get('action')
-
-        if action == 'subscribe':
-            Subscriber.objects.create(user=request.user, category=category)
-        elif action == 'unsubscribe':
-            Subscriber.objects.filter(
-                user=request.user,
-                category=category,
-            ).delete()
-
-    categories_with_subscriptions = Category.objects.annotate(
-        user_subscribed=Exists(
-            Subscriber.objects.filter(
-                user=request.user,
-                category=OuterRef('pk'),
-            )
-        )
-    ).order_by('name')
-    return render(
-        request,
-        'subscriptions.html',
-        {'categories': categories_with_subscriptions},
-    )
-
-
 class PostSearch(LoginRequiredMixin, ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = Post
@@ -183,3 +141,45 @@ def upgrade_user(request):
     Author.objects.create(authorUser=User.objects.get(pk=user.id))
 
     return redirect('/')
+
+
+# реализует страницу подписки на категорию
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+
+    message = "Вы успешно подписались на рассылку новостей категории"
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
+
+
+@login_required
+@csrf_protect
+def subscriptions(request):
+    if request.method == 'POST':
+        category_id = request.POST.get('category_id')
+        category = Category.objects.get(id=category_id)
+        action = request.POST.get('action')
+
+        if action == 'subscribe':
+            Subscriber.objects.create(user=request.user, category=category)
+        elif action == 'unsubscribe':
+            Subscriber.objects.filter(
+                user=request.user,
+                category=category,
+            ).delete()
+
+    categories_with_subscriptions = Category.objects.annotate(
+        user_subscribed=Exists(
+            Subscriber.objects.filter(
+                user=request.user,
+                category=OuterRef('pk'),
+            )
+        )
+    ).order_by('name')
+    return render(
+        request,
+        'subscriptions.html',
+        {'categories': categories_with_subscriptions},
+    )
