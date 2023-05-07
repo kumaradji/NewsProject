@@ -43,7 +43,7 @@ EMAIL_USE_SSL = True
 EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
 
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
-SERVER_EMAIL = "kumaradji@yandex.ru"
+SERVER_EMAIL = "Ku79313081435@yandex.ru"
 ADMINS = (
     ('Кумар', 'kumaradji@me.com'),
 )

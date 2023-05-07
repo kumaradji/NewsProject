@@ -1,7 +1,8 @@
 from allauth.account.forms import SignupForm
-from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.core.mail import mail_managers, mail_admins
-from django.contrib.auth.models import Group
+
+from news_portal import settings
 
 
 class CustomSignupForm(SignupForm):
@@ -15,7 +16,7 @@ class CustomSignupForm(SignupForm):
             f'<a href="http://127.0.0.1:8000/news">сайте</a>!'
         )
         msg = EmailMultiAlternatives(
-            subject=subject, body=text, from_email=None, to=[user.email]
+            subject=subject, body=text, from_email=settings.DEFAULT_FROM_EMAIL, to=[user.email]
         )
         msg.attach_alternative(html, "text/html")
         msg.send()

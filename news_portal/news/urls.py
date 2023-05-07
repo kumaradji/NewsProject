@@ -1,12 +1,14 @@
-
-from django.urls import path, include
+from django.urls import path
 from .views import (PostList, PostSearch, PostDetail, PostCreate,
                     PostUpdate, PostDelete, subscriptions, CategoryListView, subscribe, upgrade_user)
-from . import views
+# from .views import IndexView
+from django.views.decorators.cache import cache_page
 
 urlpatterns = [
 
     path('', PostList.as_view(), name='post_list'),
+    path('<int:pk>', cache_page(60*10)(PostDetail.as_view()), name='post'),
+
     path('<int:pk>', PostDetail.as_view(), name='post'),
     path('search/', PostSearch.as_view(), name='post_search'),
     path('create/', PostCreate.as_view(), name='post_create'),
@@ -17,7 +19,7 @@ urlpatterns = [
     path('upgrade/', upgrade_user, name='account_upgrade'),
     path('subscriptions/', subscriptions, name='subscriptions'),
 
-    # path('categories/<int:pk>/subscribe', subscriptions, name='subscriptions'),
 
-    # path('<int:post_id>/share/', views.post_share, name='post_share'),
+    # path('index/', IndexView.as_view()),
+
 ]
