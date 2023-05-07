@@ -16,7 +16,10 @@ class CustomSignupForm(SignupForm):
             f'<a href="http://127.0.0.1:8000/news">сайте</a>!'
         )
         msg = EmailMultiAlternatives(
-            subject=subject, body=text, from_email=settings.DEFAULT_FROM_EMAIL, to=[user.email]
+            subject=subject,
+            body=text,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[user.email]
         )
         msg.attach_alternative(html, "text/html")
         msg.send()

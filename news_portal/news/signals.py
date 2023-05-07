@@ -37,6 +37,7 @@ def new_post_notification(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
         new_post_notify.delay(instance.id)
 
+
 # рассылка подписчикам при создании публикации (без celery)
 # @receiver(m2m_changed, sender=PostCategory)
 # def notify_about_new_post(sender, instance, **kwargs):
@@ -54,27 +55,27 @@ def new_post_notification(sender, instance, **kwargs):
 #         send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
 
 
-# создаём рассылку по почте когда создается новая публикация
-@receiver(post_save, sender=PostCreate)
-def news_created(instance, created, **kwargs):
-    if not created:
-        return
-    emails = User.objects.filter(
-        subscriptions__category=instance.id).values_list('email', flat=True)
-    subject = f'Новая публикация в категории {instance.category}'
-
-    text_content = (
-        f'Публикация: {instance.author}\n'
-        f'Тема: {instance.text}\n\n'
-        f'Ссылка на публикацию: http://127.0.0.1{instance.get_success_url()}'
-    )
-    html_content = (
-        f'Публикация: {instance.author}<br>'
-        f'Тема: {instance.text}<br><br>'
-        f'<a href="http://127.0.0.1{instance.get_success_url()}">'
-        f'Ссылка на публикацию</a>'
-    )
-    for email in emails:
-        msg = EmailMultiAlternatives(subject, text_content, None, [email])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
+# # создаём рассылку по почте когда создается новая публикация
+# @receiver(post_save, sender=PostCreate)
+# def news_created(instance, created, **kwargs):
+#     if not created:
+#         return
+#     emails = User.objects.filter(
+#         subscriptions__category=instance.id).values_list('email', flat=True)
+#     subject = f'Дружок, вот Новая публикация в категории {instance.category}'
+#
+#     text_content = (
+#         f'Публикация: {instance.author}\n'
+#         f'Тема: {instance.text}\n\n'
+#         f'Ссылка на публикацию: http://127.0.0.1{instance.get_success_url()}'
+#     )
+#     html_content = (
+#         f'Публикация: {instance.author}<br>'
+#         f'Тема: {instance.text}<br><br>'
+#         f'<a href="http://127.0.0.1{instance.get_success_url()}">'
+#         f'Ссылка на публикацию</a>'
+#     )
+#     for email in emails:
+#         msg = EmailMultiAlternatives(subject, text_content, None, [email])
+#         msg.attach_alternative(html_content, "text/html")
+#         msg.send()

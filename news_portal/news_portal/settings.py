@@ -19,13 +19,13 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
-    }
-}
+#
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+#     }
+# }
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -46,17 +46,20 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Настройки почты отправляется на реальный почтовый ящик
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+# хост почтового сервера
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# логин почтового сервера
+EMAIL_HOST_USER = 'Ku79313081435@yandex.ru'
+# пароль пользователя почтового сервера
+EMAIL_HOST_PASSWORD = 'mcoiviutbawsxidk'
+DEFAULT_FROM_EMAIL = 'Ku79313081435@yandex.ru'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-EMAIL_SUBJECT_PREFIX = 'NewsPortal_Kumar'
-
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = "Ku79313081435@yandex.ru"
+EMAIL_SUBJECT_PREFIX = 'NewsPortal_kumaradji'
+
 ADMINS = (
     ('Кумар', 'kumaradji@me.com'),
 )
