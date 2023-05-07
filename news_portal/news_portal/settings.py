@@ -1,5 +1,13 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Check enviroment varibles loading
+dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+else:
+    print("Не найден файл переменных окружения '.env'")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7&7zcad^v^)+=!p-tfekn9i79a!6!60(l9ss1aoxu5(ke&)(av'
@@ -52,7 +60,7 @@ EMAIL_PORT = 465
 # логин почтового сервера
 EMAIL_HOST_USER = 'Ku79313081435@yandex.ru'
 # пароль пользователя почтового сервера
-EMAIL_HOST_PASSWORD = 'mcoiviutbawsxidk'
+EMAIL_HOST_PASSWORD = os.getenv('DEFAULT_FROM_EMAIL')
 DEFAULT_FROM_EMAIL = 'Ku79313081435@yandex.ru'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
