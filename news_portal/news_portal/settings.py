@@ -2,12 +2,13 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Check enviroment varibles loading
-dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path)
-else:
-    print("Не найден файл переменных окружения '.env'")
+load_dotenv()
+# # Check enviroment varibles loading
+# dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
+# if os.path.exists(dotenv_path):
+#     load_dotenv(dotenv_path)
+# else:
+#     print("Не найден файл переменных окружения '.env'")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7&7zcad^v^)+=!p-tfekn9i79a!6!60(l9ss1aoxu5(ke&)(av'
@@ -50,9 +51,9 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 # хранит количество дней, когда доступна ссылка на подтверждение регистрации
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 10
 # Настройки почты отправляется на консоль
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Настройки почты отправляется на реальный почтовый ящик
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # хост почтового сервера
 EMAIL_HOST = 'smtp.yandex.ru'
