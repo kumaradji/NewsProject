@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7&7zcad^v^)+=!p-tfekn9i79a!6!60(l9ss1aoxu5(ke&)(av'
@@ -19,13 +22,14 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-#
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#         'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
-#     }
-# }
+
+CACHES = {
+    'default': {
+        'TIMEOUT': 30,
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -50,9 +54,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 # логин почтового сервера
-EMAIL_HOST_USER = 'Ku79313081435@yandex.ru'
+EMAIL_HOST_USER = 'Ku79313081435'
 # пароль пользователя почтового сервера
-EMAIL_HOST_PASSWORD = 'mcoiviutbawsxidk'
+# EMAIL_HOST_PASSWORD = "mcoiviutbawsxidk"
+EMAIL_HOST_PASSWORD = os.getenv('DEFAULT_FROM_EMAIL')
 DEFAULT_FROM_EMAIL = 'Ku79313081435@yandex.ru'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
@@ -98,8 +103,8 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.cache.UpdateCacheMiddleware',
-    # 'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'news_portal.urls'
