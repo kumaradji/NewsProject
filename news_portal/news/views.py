@@ -93,16 +93,17 @@ class PostDetail(LoginRequiredMixin, DetailView):
     queryset = Post.objects.all()
 
     # переопределяем метод получения объекта, как ни странно
-    def get_object(self, *args, **kwargs):
-        obj = cache.get(f'post-{self.kwargs["pk"]}',
-                        None)
-
-        # если объекта нет в кэше, то получаем его и записываем в кэш
-        if not obj:
-            obj = super().get_object(queryset=self.queryset)
-            cache.set(f'post-{self.kwargs["pk"]}', obj)
-
-        return obj
+    # def get_object(self, *args, **kwargs):
+    #     obj = cache.get(f'post-{self.kwargs["pk"]}',
+    #                     None)
+    #
+    #     # если объекта нет в кэше, то получаем его и записываем в кэш
+    #     if not obj:
+    #         obj = super().get_object(queryset=self.queryset)
+    #         cache.set(f'post-{self.kwargs["pk"]}', obj)
+    #
+    #     return obj
+    #
 
 
 # Представление для создания новости
