@@ -23,13 +23,13 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-# CACHES = {
-#     'default': {
-#         'TIMEOUT': 30,
-#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-#         'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
-#     }
-# }
+CACHES = {
+    'default': {
+        'TIMEOUT': 30,
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -103,9 +103,8 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 
     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.cache.UpdateCacheMiddleware',
-#     'django.middleware.cache.FetchFromCacheMiddleware',
-
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'news_portal.urls'
