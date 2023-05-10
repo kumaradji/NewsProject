@@ -1,13 +1,21 @@
 from allauth.account.forms import SignupForm
+from django.contrib.auth.models import Group
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import mail_managers, mail_admins
 
 from news_portal import settings
 
 
+def add_to_common_group(user):
+    group = Group.objects.get(name='common')
+    group.user_set.add(user)
+
+
 class CustomSignupForm(SignupForm):
     def save(self, request):
-        user = super().save(request)
+        user = super(CustomSignupForm, self).save(request)
+        basic_group = Group.objects.get(name='common')
+        basic_group.user_set.add(user)
 
         subject = 'Добро пожаловать на наш новостной портал!'
         text = f'{user.username}, вы успешно зарегистрировались на сайте!'
@@ -34,4 +42,3 @@ class CustomSignupForm(SignupForm):
             message=f'Пользователь {user.username} зарегистрировался на сайте.'
         )
         return user
-

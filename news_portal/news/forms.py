@@ -22,10 +22,3 @@ class EmailPostForm(forms.Form):
     comments = forms.CharField(required=False,
                                widget=forms.Textarea)
 
-
-# class BasicSignupForm(SignupForm):
-#
-#     def save(self, request):
-#         user = super(BasicSignupForm, self).save(request)
-#         basic_group = Group.objects.get(name='newuser')
-#         basic_group.user_set.add(user)
