@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (PostList, PostSearch, PostDetail, PostCreate,
-                    PostUpdate, PostDelete, subscriptions, CategoryListView, subscribe, upgrade_user)
-# from .views import IndexView
+                    PostUpdate, PostDelete, subscriptions,
+                    CategoryListView, subscribe, upgrade_user)
 from django.views.decorators.cache import cache_page
 
 urlpatterns = [
@@ -18,8 +18,5 @@ urlpatterns = [
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
     path('upgrade/', upgrade_user, name='account_upgrade'),
     path('subscriptions/', subscriptions, name='subscriptions'),
-
-
-    # path('index/', IndexView.as_view()),
 
 ]

@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.utils import timezone
 
 from celery import shared_task
@@ -65,5 +64,3 @@ def new_post_notify(instance_id):
 
         msg.attach_alternative(html_context, 'text/html')
         msg.send()
-
-

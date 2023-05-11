@@ -1,10 +1,8 @@
-from email.headerregistry import Group
-
-from allauth.account.forms import SignupForm
 from django import forms
-from .models import *
+from .models import Post
 
 
+# Используется при новой публикации
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -21,4 +19,3 @@ class EmailPostForm(forms.Form):
     to = forms.EmailField()
     comments = forms.CharField(required=False,
                                widget=forms.Textarea)
-
