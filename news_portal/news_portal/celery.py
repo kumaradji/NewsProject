@@ -17,9 +17,4 @@ app.conf.beat_schedule = {
         'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
         'args': (),
     },
-    # 'send_email_every_30': {
-    #     'task': 'news.tasks.send_email',
-    #     'schedule': 30.0,
-    #     'args': (),
-    # },
 }
