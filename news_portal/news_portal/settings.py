@@ -72,7 +72,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filters': ['require_debug_false'],
-            'filename': 'general.log',
+            'filename': 'news_portal/general.log',
             'formatter': 'standart'
         },
         # В файл errors.log должны выводиться сообщения только уровня ERROR и CRITICAL.
@@ -82,7 +82,7 @@ LOGGING = {
         'errors': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': 'errors.log',
+            'filename': 'news_portal/errors.log',
             'formatter': 'forerror'
         },
         # В консоль должны выводиться все сообщения уровня DEBUG и выше, включающие время,
@@ -111,7 +111,7 @@ LOGGING = {
             'level': 'INFO',
             'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
-            'filename': 'security.log',
+            'filename': 'news_portal/security.log',
             'formatter': 'forwarning',
         },
     },

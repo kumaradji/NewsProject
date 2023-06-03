@@ -15,14 +15,14 @@ from django.urls import reverse_lazy, reverse
 from django.core.cache import cache  # импортируем наш кэш
 
 
+# Представление для главной страницы
 class PostList(LoginRequiredMixin, ListView):
     model = Post
     # указываем способ сортировки
     ordering = '-date'
     # указываем шаблон представления
     template_name = 'news.html'
-    # указываем переменную, которую будем использовать в
-    # шаблоне news.html
+    # указываем переменную, которую будем использовать в шаблоне news.html
     context_object_name = 'news'
     paginate_by = 6
 
@@ -31,6 +31,7 @@ class PostList(LoginRequiredMixin, ListView):
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
+    # забираем отфильтрованные объекты переопределяя метод get_context_data у наследуемого класса
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
@@ -53,6 +54,8 @@ class CategoryListView(PostList):
 
     # создаём кнопку подписаться, если ещё не подписан
     def get_context_data(self, **kwargs):
+
+        # общаемся к содержимому контекста нашего представления
         context = super().get_context_data(**kwargs)
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
         # context['is_subscriber'] = self.request.user in self.category.subscribers.all()
@@ -60,6 +63,7 @@ class CategoryListView(PostList):
         return context
 
 
+# Представление для поиска статей
 class PostSearch(LoginRequiredMixin, ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = Post
@@ -84,6 +88,7 @@ class PostSearch(LoginRequiredMixin, ListView):
         return context
 
 
+# Представление для получения деталей о посте
 class PostDetail(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'post_view.html'
