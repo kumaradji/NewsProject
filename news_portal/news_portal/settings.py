@@ -73,7 +73,7 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filters': ['require_debug_false'],
             'filename': 'general.log',
-            'formatter': 'standart'
+            'formatter': 'forinfo'
         },
         # В файл errors.log должны выводиться сообщения только уровня ERROR и CRITICAL.
         # В сообщении указывается время, уровень логирования, само сообщение,
@@ -85,23 +85,46 @@ LOGGING = {
             'filename': 'errors.log',
             'formatter': 'forerror'
         },
-        # В консоль должны выводиться все сообщения уровня DEBUG и выше, включающие время,
-        # уровень сообщения, сообщения. Для сообщений WARNING и выше дополнительно должен
-        # выводиться путь к источнику события (используется аргумент pathname в форматировании).
-        # А для сообщений ERROR и CRITICAL еще должен выводить стэк ошибки (аргумент exc_info).
-        # Сюда должны попадать все сообщения с основного логгера django.
-        'console': {
+        # В консоль должны выводиться все сообщения уровня DEBUG и выше,
+        # включающие время, уровень сообщения, сообщения.
+        'console_standart': {
             'level': 'DEBUG',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
             'formatter': 'standart',
         },
+        # Для сообщений WARNING и выше дополнительно должен
+        # выводиться путь к источнику события (используется аргумент pathname в форматировании).
+        'console_warning': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'forwarning',
+        },
+        # А для сообщений ERROR и CRITICAL еще должен выводить стэк ошибки (аргумент exc_info).
+        # Сюда должны попадать все сообщения с основного логгера django.
+        'console_error': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'forerror',
+        },
         # На почту должны отправляться сообщения уровней ERROR и выше из django.request
         # и django.server по формату, как в errors.log, но без стэка ошибок.
+        # Более того, при помощи фильтров нужно указать, что в консоль сообщения отправляются
+        # только при DEBUG = True
+        'console_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'forwarning',
+        },
+        # а на почту и в файл general.log — только при DEBUG = False.
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
+            'filename': 'general.log',
             'formatter': 'forwarning',
         },
         # В файл security.log должны попадать только сообщения, связанные с безопасностью,
@@ -112,12 +135,17 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
             'filename': 'security.log',
-            'formatter': 'forwarning',
+            'formatter': 'security',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'general'],
+            'handlers': ['console_standart',
+                         'console_warning',
+                         'console_error',
+                         'general',
+                         'errors',
+                         'security'],
             'level': 'DEBUG',
             'propagate': True,
         },
