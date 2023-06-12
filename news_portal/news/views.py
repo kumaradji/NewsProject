@@ -1,3 +1,5 @@
+import pytz  # импортируем стандартный модуль для работы с часовыми поясами
+
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
@@ -5,14 +7,36 @@ from django.db.models import OuterRef, Exists
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView
+    View, ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .filters import PostFilter
 from .forms import PostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponse
 from django.core.cache import cache  # импортируем наш кэш
+from django.utils.translation import gettext as _  # импортируем функцию для перевода
+
+
+class Index(View):
+    def get(self, request):
+        curent_time = pytz.timezone.now()
+        models = Post.objects.all()
+
+        context = {
+            'models': models,
+            'current_time': pytz.timezone.now(),
+            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+        }
+
+        return HttpResponse(render(request, 'index.html', context))
+
+    #  по пост-запросу будем добавлять в сессию часовой пояс,
+    #  который и будет обрабатываться написанным нами ранее middleware
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')
 
 
 # Представление для главной страницы
@@ -54,7 +78,6 @@ class CategoryListView(PostList):
 
     # создаём кнопку подписаться, если ещё не подписан
     def get_context_data(self, **kwargs):
-
         # общаемся к содержимому контекста нашего представления
         context = super().get_context_data(**kwargs)
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()

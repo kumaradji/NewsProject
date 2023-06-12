@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.cache import cache
 
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext_lazy
+
 
 # Модель, содержащая объекты всех авторов
 # имеет следующие поля:
@@ -51,7 +54,9 @@ class Category(models.Model):
     # Имеет единственное поле: название категории. Поле должно быть уникальным
     # (в определении поля необходимо написать параметр unique = True).
     # Максимальную длину строки берут в н-ой степени, 2,4,8,16,32...128,256
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64,
+                            unique=True,
+                            verbose_name=pgettext_lazy('help text for Category model', 'This is the help text'), )
     subscribers = models.ManyToManyField(User, blank=True, related_name='categories', through='Subscriber')
 
     class Meta:
@@ -84,7 +89,7 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     # связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory)
-    category = models.ManyToManyField(Category, through='PostCategory')
+    category = models.ManyToManyField(Category, through='PostCategory', help_text=_('category name'))
 
     # заголовок статьи/новости
     title = models.CharField(max_length=255)
