@@ -18,5 +18,4 @@ urlpatterns = [
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
     path('upgrade/', upgrade_user, name='account_upgrade'),
     path('subscriptions/', subscriptions, name='subscriptions'),
-
 ]

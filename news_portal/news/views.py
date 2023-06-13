@@ -4,30 +4,35 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
-    View, ListView, DetailView, CreateView, UpdateView, DeleteView
+    ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .filters import PostFilter
 from .forms import PostForm
-from .models import *
+from .models import Post, Category, Subscriber, Author
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse
-from django.core.cache import cache  # импортируем наш кэш
-from django.utils.translation import gettext as _  # импортируем функцию для перевода
+from django.core.cache import cache
+
+from django.shortcuts import render
+from django.views import View
+from django.http.response import HttpResponse
+
+from django.shortcuts import redirect
 
 
 class Index(View):
     def get(self, request):
-        curent_time = pytz.timezone.now()
+        current_time = pytz.timezone.now()
         models = Post.objects.all()
 
         context = {
             'models': models,
             'current_time': pytz.timezone.now(),
-            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+            # добавляем в контекст все доступные часовые пояса
+            'timezones': pytz.common_timezones
         }
 
         return HttpResponse(render(request, 'index.html', context))

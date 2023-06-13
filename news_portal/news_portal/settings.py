@@ -31,6 +31,166 @@ CELERY_RESULT_SERIALIZER = 'json'
 #     }
 # }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standart': {
+            'format': '{asctime} :: {levelname} -- {message}',
+            'style': '{',
+        },
+        'forinfo': {
+            'format': '{asctime} :: {levelname} -- {module} : {message}',
+            'style': '{',
+        },
+        'forwarning': {
+            'format': '{asctime} :: {levelname} -- {pathname} : {message}',
+            'style': '{',
+        },
+        'forerror': {
+            'format': '{asctime} :: {levelname} -- {pathname} / {exc_info} :{message}',
+            'style': '{',
+        },
+        'security': {
+            'format': '{asctime} :: {levelname} -- {module} : {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        # В файл general.log должны выводиться сообщения уровня INFO и выше только с
+        # указанием времени, уровня логирования, модуля, в котором возникло
+        # сообщение (аргумент module) и само сообщение. Сюда также попадают сообщения с регистратора django.
+        'general': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filters': ['require_debug_false'],
+            'filename': 'general.log',
+            'formatter': 'forinfo'
+        },
+        # В файл errors.log должны выводиться сообщения только уровня ERROR и CRITICAL.
+        # В сообщении указывается время, уровень логирования, само сообщение,
+        # путь к источнику сообщения и стэк ошибки. В этот файл должны попадать
+        # сообщения только из логгеров django.request, django.server, django.template, django.db.backends.
+        'errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'errors.log',
+            'formatter': 'forerror'
+        },
+        # В консоль должны выводиться все сообщения уровня DEBUG и выше,
+        # включающие время, уровень сообщения, сообщения.
+        'console_standart': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'standart',
+        },
+        # Для сообщений WARNING и выше дополнительно должен
+        # выводиться путь к источнику события (используется аргумент pathname в форматировании).
+        'console_warning': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'forwarning',
+        },
+        # А для сообщений ERROR и CRITICAL еще должен выводить стэк ошибки (аргумент exc_info).
+        # Сюда должны попадать все сообщения с основного логгера django.
+        'console_error': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'forerror',
+        },
+        # На почту должны отправляться сообщения уровней ERROR и выше из django.request
+        # и django.server по формату, как в errors.log, но без стэка ошибок.
+        # Более того, при помощи фильтров нужно указать, что в консоль сообщения отправляются
+        # только при DEBUG = True
+        'console_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'forwarning',
+        },
+        # а на почту только при DEBUG = False.
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'forwarning',
+        },
+        # в файл general.log — только при DEBUG = False.
+        'admins_general_file': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'formatter': 'forwarning',
+        },
+        # В файл security.log должны попадать только сообщения, связанные с безопасностью,
+        # а значит только из логгера django.security. Формат вывода предполагает время,
+        # уровень логирования, модуль и сообщение
+        'security': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': 'security.log',
+            'formatter': 'security',
+        },
+    },
+    'loggers': {
+        # 'django': {
+        #     'handlers': ['console_standart',
+        #                  'console_warning',
+        #                  'console_error',
+        #                  'general',
+        #                  'errors',
+        #                  'security',
+        #                  'console_admins',
+        #                  'mail_admins',
+        #                  'admins_general_file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'django.request': {
+            'handlers': ['errors',
+                         'mail_admins',
+                         'general',
+                         'admins_general_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.server': {
+            'handlers': ['errors',
+                         'mail_admins',
+                         'admins_general_file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.template': {
+            'handlers': ['errors'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['errors'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.security.*': {
+            'handlers': ['security'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
