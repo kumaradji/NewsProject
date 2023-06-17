@@ -18,19 +18,26 @@
 <ul class="list-group list-group-flush">
     {% for news in search_page %}
     <li class="list-group-item">
-        <h6 align="left"<small class="text-muted">{{ news.date|date:'d.m.Y' }}</small> <br>
-        <h6 align="left"<small class="fw-bold">
-        <a href="{% url 'post' news.id %}">{{ news.title | censor }} </a></small> <br>
-        <tr>
-            <small class="fw-bold">категория:
-            {% for category in news.category.all %}
-            {{ category.name }}
-            {% endfor %}
-            </small>
-            <p align="left">{{ news.text | truncatechars:210 }}</p>
+        <div class="row">
+            <div class="col">
+                <h6 align="left"<small class="text-muted">{{ news.date|date:'d.m.Y' }}</small> <br>
+                <h6 align="left"<small class="fw-bold">
+                <a href="{% url 'post' news.id %}">{{ news.title | censor }} </a></small> <br>
+                <tr>
+                    <small class="fw-bold">категория:
+                        {% for category in news.category.all %}
+                        {{ category.name }}
+                        {% endfor %}
+                    </small>
+            </div>
+            <div class="col">
+                <p align="left">{{ news.text | truncatechars:210 }}</p>
+            </div>
+        </div>
     </li>
     {% endfor %}
 </ul>
+
 
 {% else %}
 <h1>Новости не найдены</h1>

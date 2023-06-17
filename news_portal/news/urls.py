@@ -1,4 +1,6 @@
 from django.urls import path
+
+from . import views
 from .views import (PostList, PostSearch, PostDetail, PostCreate,
                     PostUpdate, PostDelete, subscriptions,
                     CategoryListView, subscribe, upgrade_user)
@@ -18,4 +20,6 @@ urlpatterns = [
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
     path('upgrade/', upgrade_user, name='account_upgrade'),
     path('subscriptions/', subscriptions, name='subscriptions'),
+    path('set_timezone/', views.set_timezone, name='set_timezone'),
+    path('set_language/', views.set_language, name='set_language'),
 ]

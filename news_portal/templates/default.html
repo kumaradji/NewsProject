@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>{%block title%}{%endblock title%}</title>
+    <title>{% block title %}{% endblock title %}</title>
     {% load static %}
     {% load custom_filters %}
     {% load custom_tags %}
@@ -27,23 +27,26 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="/subscriptions/">Подписка</a>
+                </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/news/search">Поиск</a>
                     {% if user.username %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/accounts/logout">Выйти</a>
-                <li class="nav-item">
-                    <a class="nav-link" href="/news">Вы вошли как {{ user.username }}</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/accounts/logout">Выйти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/news">Вы вошли как {{ user.username }}</a>
+                        </li>
                     {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/accounts/login">Войти</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/accounts/login">Войти</a>
+                        </li>
                     {% endif %}
-
                 </li>
             </ul>
             <form class="d-flex" role="search" action="{% url 'post_search' %}" method="get">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" name="q">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
             </form>
 
         </div>
@@ -52,11 +55,51 @@
 
 <div class="container">
     <div class="row">
+        <div class="col">
+            <form action="{% url 'set_timezone' %}" method="post" class="form-group">
+                {% csrf_token %}
+                <label for="timezone">Выберите тайм-зону:</label>
+                <select name="timezone" id="timezone">
+                    {% get_current_timezone as current_timezone %}
+                    {% for tz in timezones %}
+                        <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Установить">
+            </form>
+        </div>
+        <div class="col">
+            <form action="{% url 'set_language' %}" method="post" class="form-group">
+                {% csrf_token %}
+                <label for="language">Выберите язык:</label>
+                <select name="language" id="language">
+                    {% get_current_language as current_language %}
+                    {% get_available_languages as available_languages %}
+                    {% for lang_code, lang_name in available_languages %}
+                        <option value="{{ lang_code }}" {% if lang_code == current_language %}selected{% endif %}>{{ lang_name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Установить">
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <p>Текущая тайм-зона: {{ request.session.timezone }}</p>
+        </div>
+        <div class="col">
+            <p>Текущий язык: {{ request.LANGUAGE_CODE }}</p>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-16 text-center">
             {% block content %}
             {% endblock content %}
         </div>
     </div>
 </div>
+
 </body>
 </html>
