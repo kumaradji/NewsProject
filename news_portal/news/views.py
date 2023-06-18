@@ -1,26 +1,27 @@
-import pytz  # импортируем стандартный модуль для работы с часовыми поясами
-
+import pytz
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.urls import reverse_lazy, reverse
+from django.core.cache import cache
+from django.utils import timezone
+from django.utils.translation import activate, get_language
+from django.views import View
+from django.http.response import HttpResponse
 from .filters import PostFilter
 from .forms import PostForm
 from .models import Post, Category, Subscriber, Author
-from django.urls import reverse_lazy, reverse
-from django.core.cache import cache
 
-from django.shortcuts import render
-from django.views import View
-from django.http.response import HttpResponse
+from django.core.cache import cache  # импортируем наш кэш
 
-from django.shortcuts import redirect
+LANGUAGE_SESSION_KEY = 'language'  # Define your language session key
 
 
 class Index(View):
@@ -42,6 +43,24 @@ class Index(View):
     def post(self, request):
         request.session['django_timezone'] = request.POST['timezone']
         return redirect('/')
+
+
+def set_timezone(request):
+    if request.method == 'POST':
+        timezone_value = request.POST.get('timezone')
+        if timezone_value:
+            request.session['django_timezone'] = timezone_value
+            timezone.activate(timezone_value)
+    return redirect('/')
+
+
+def set_language(request):
+    if request.method == 'POST':
+        language_code = request.POST.get('language')
+        if language_code:
+            activate(language_code)
+            request.session[LANGUAGE_SESSION_KEY] = language_code
+    return redirect('/')
 
 
 # Представление для главной страницы

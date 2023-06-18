@@ -8,15 +8,15 @@ django-admin startproject news_portal
 python manage.py createsuperuser
 
 cd news_portal
-./manage.py runserver
+python manage.py runserver
 
 cd news_portal # переходим через открыть через терминал
 python3 manage.py startapp news
 
 settings.py -> NSTALLED_APP -> add'news'
 
-./manage.py makemigrations
-./manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 
 python3 manage.py shell
 from news.models import *
@@ -46,13 +46,5 @@ pip3 install -U "celery[redis]"
 brew services start redis
 export DJANGO_SETTINGS_MODULE=news_portal.settings
 
-------------------------------------------
-python manage.py makemessages -l ru
-python manage.py compilemessages
-
-pip install django-modeltranslation
-
-./manage.py update_translation_fields
-
-brew install gettext
-brew link gettext --force
+./manage.py makemessages -l ru
+./manage.py compilemessages
