@@ -2,17 +2,60 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView
+    View, ListView, DetailView, CreateView, UpdateView, DeleteView
 )
+from django.shortcuts import render
+from django.views import View
+from django.utils import timezone
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from .filters import PostFilter
 from .forms import PostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
 from django.core.cache import cache  # импортируем наш кэш
+
+
+def language_selection(request):
+    if request.method == 'POST':
+        language_code = request.POST.get('language')
+        next_url = request.POST.get('next', '/')
+        response = HttpResponseRedirect(next_url)
+        response.set_cookie('django_language', language_code)
+        return response
+
+    redirect_to = request.GET.get('next', '/')
+    current_language_code = request.LANGUAGE_CODE
+
+    context = {
+        'redirect_to': redirect_to,
+        'current_language_code': current_language_code,
+    }
+
+    return render(request, 'language_selection.html', context)
+
+
+def set_timezone(request):
+    if request.method == 'POST':
+        # Получаем выбранный часовой пояс из POST-запроса
+        timezone_name = request.POST.get('timezone')
+        # Устанавливаем новый часовой пояс в сессию пользователя
+        request.session['django_timezone'] = timezone_name
+    # Редиректим пользователя на главную страницу
+    return redirect('/news')
+
+
+def home(request):
+    # Получаем текущий часовой пояс из сессии пользователя
+    current_timezone = request.session.get('django_timezone', 'UTC')
+    # Получаем текущую дату и время в выбранном часовом поясе
+    current_datetime = timezone.now().astimezone(timezone.get_timezone(current_timezone))
+    # Передаем текущую дату и время в контекст шаблона
+    context = {'current_datetime': current_datetime}
+    return render(request, 'news.html', context)
 
 
 # Представление для главной страницы
@@ -54,7 +97,6 @@ class CategoryListView(PostList):
 
     # создаём кнопку подписаться, если ещё не подписан
     def get_context_data(self, **kwargs):
-
         # общаемся к содержимому контекста нашего представления
         context = super().get_context_data(**kwargs)
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()

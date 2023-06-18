@@ -56,3 +56,13 @@ pip install django-modeltranslation
 
 brew install gettext
 brew link gettext --force
+
+deactivate  # если виртуальное окружение активно
+rm -r venv  # удалить папку venv
+python -m venv venv  # создать новое виртуальное окружение
+source venv/bin/activate  # активировать виртуальное окружение
+pip install virtualenv
+virtualenv venv
+source venv/bin/activate
+
+
