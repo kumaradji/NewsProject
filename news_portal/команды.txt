@@ -45,3 +45,14 @@ pip3 install -U "celery[redis]"
 
 brew services start redis
 export DJANGO_SETTINGS_MODULE=news_portal.settings
+
+------------------------------------------
+python manage.py makemessages -l ru
+python manage.py compilemessages
+
+pip install django-modeltranslation
+
+./manage.py update_translation_fields
+
+brew install gettext
+brew link gettext --force

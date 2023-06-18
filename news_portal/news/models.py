@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.cache import cache
+from django.utils.translation import gettext as _, gettext_lazy
 
 
 # Модель, содержащая объекты всех авторов
@@ -51,8 +52,18 @@ class Category(models.Model):
     # Имеет единственное поле: название категории. Поле должно быть уникальным
     # (в определении поля необходимо написать параметр unique = True).
     # Максимальную длину строки берут в н-ой степени, 2,4,8,16,32...128,256
-    name = models.CharField(max_length=64, unique=True)
-    subscribers = models.ManyToManyField(User, blank=True, related_name='categories', through='Subscriber')
+    name = models.CharField(
+        max_length=64,
+        unique=True,
+        verbose_name=_('help text for Category model'),
+        help_text=_('This is the help text')
+    )
+    subscribers = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name='categories',
+        through='Subscriber'
+    )
 
     class Meta:
         verbose_name = 'Категория'
@@ -62,7 +73,8 @@ class Category(models.Model):
         return f'{self.name}'
 
     def get_absolute_url(self):
-        return reverse('news_category', kwargs={'category_id': self.id})
+        return reverse('news_category',
+                       kwargs={'category_id': self.id})
 
 
 # Статьи и новости, которые создают пользователи.
@@ -78,16 +90,21 @@ class Post(models.Model):
 
     # связь «один ко многим» с моделью Author
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
+    categoryType = models.CharField(max_length=2,
+                                    choices=CATEGORY_CHOICES,
+                                    default=ARTICLE)
 
     # автоматически добавляемая дата и время создания
     date = models.DateTimeField(auto_now_add=True)
 
     # связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory)
-    category = models.ManyToManyField(Category, through='PostCategory')
+    category = models.ManyToManyField(Category,
+                                      through='PostCategory',
+                                      help_text=_('category name'))
 
     # заголовок статьи/новости
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,
+                             verbose_name=gettext_lazy('Заголовок'))
 
     # текст статьи/новости
     text = models.TextField()
