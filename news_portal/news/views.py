@@ -2,7 +2,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import (
@@ -17,25 +17,23 @@ from .forms import PostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
 from django.core.cache import cache  # импортируем наш кэш
+import pytz
 
 
-def language_selection(request):
-    if request.method == 'POST':
-        language_code = request.POST.get('language')
-        next_url = request.POST.get('next', '/')
-        response = HttpResponseRedirect(next_url)
-        response.set_cookie('django_language', language_code)
-        return response
+class Index(View):
+    def get(self, request):
+        current_time = timezone.now()
 
-    redirect_to = request.GET.get('next', '/')
-    current_language_code = request.LANGUAGE_CODE
+        # .  Translators: This message appears on the home page only
+        models = Post.objects.all()
 
-    context = {
-        'redirect_to': redirect_to,
-        'current_language_code': current_language_code,
-    }
+        context = {
+            'models': models,
+            'current_time': timezone.now(),
+            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+        }
 
-    return render(request, 'language_selection.html', context)
+        return HttpResponse(render(request, 'default.html', context))
 
 
 def set_timezone(request):
