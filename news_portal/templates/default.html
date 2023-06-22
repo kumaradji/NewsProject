@@ -64,20 +64,6 @@
     <input type="submit" value="set">
 </form>
 
-<p>Текущая дата и время: {{ current_datetime }}</p>
-
-    <form action="{% url 'set_timezone' %}" method="post">
-        {% csrf_token %}
-        <label for="timezone">Выберите часовой пояс:</label>
-        <select name="timezone" id="timezone">
-            <option value="UTC" {% if current_timezone == 'UTC' %}selected{% endif %}>UTC</option>
-            <option value="Europe/Moscow" {% if current_timezone == 'Europe/Moscow' %}selected{% endif %}>Москва</option>
-            <option value="America/New_York" {% if current_timezone == 'America/New_York' %}selected{% endif %}>Нью-Йорк</option>
-            <!-- Добавьте другие часовые пояса по вашему выбору -->
-        </select>
-        <input type="submit" value="Установить">
-    </form>
-
 <!-- Page content-->
 <div class="container">
     <div class="row">
