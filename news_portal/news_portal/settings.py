@@ -28,7 +28,6 @@ CELERY_RESULT_SERIALIZER = 'json'
 #     }
 # }
 
-
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -103,6 +102,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
+    'news.middlewares.TimezoneMiddleware',
 
     # 'django.middleware.cache.UpdateCacheMiddleware',
     # 'django.middleware.common.CommonMiddleware',
@@ -317,11 +318,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Europe/Moscow'
+LANGUAGE_CODE = 'ru'
+TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-USE_L10N = True
+# USE_L10N = True
 LANGUAGES = [
     ('en-us', 'English'),
     ('ru', 'Русский')
@@ -331,4 +332,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"
+]
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
 ]

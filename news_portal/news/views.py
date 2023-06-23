@@ -1,4 +1,6 @@
+import pytz
 from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import OuterRef, Exists
@@ -17,7 +19,6 @@ from .forms import PostForm
 from .models import *
 from django.urls import reverse_lazy, reverse
 from django.core.cache import cache  # импортируем наш кэш
-import pytz
 
 
 class Index(View):
@@ -33,27 +34,11 @@ class Index(View):
             'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
         }
 
-        return HttpResponse(render(request, 'default.html', context))
+        return HttpResponse(render(request, 'index.html', context))
 
-
-def set_timezone(request):
-    if request.method == 'POST':
-        # Получаем выбранный часовой пояс из POST-запроса
-        timezone_name = request.POST.get('timezone')
-        # Устанавливаем новый часовой пояс в сессию пользователя
-        request.session['django_timezone'] = timezone_name
-    # Редиректим пользователя на главную страницу
-    return redirect('/news')
-
-
-def home(request):
-    # Получаем текущий часовой пояс из сессии пользователя
-    current_timezone = request.session.get('django_timezone', 'UTC')
-    # Получаем текущую дату и время в выбранном часовом поясе
-    current_datetime = timezone.now().astimezone(timezone.get_timezone(current_timezone))
-    # Передаем текущую дату и время в контекст шаблона
-    context = {'current_datetime': current_datetime}
-    return render(request, 'news.html', context)
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')
 
 
 # Представление для главной страницы

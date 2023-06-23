@@ -16,13 +16,15 @@
 
     <style>
         body {background-color: {% if current_time.hour >= 19 or current_time.hour <= 7 %} darkcyan {% else %} powderblue {% endif %};}
+
     </style>
 
 </head>
 <body>
-    <!-- Responsive navbar -->
-   <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-    <div class="container-fluid justify-content-center"> <!-- Добавлен класс justify-content-center для центрирования -->
+<!-- Responsive navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container-fluid justify-content-center">
+        <!-- Добавлен класс justify-content-center для центрирования -->
         <a class="nav-link" href="/news">Все новости</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,51 +55,53 @@
     </div>
 </nav>
 
-    <form action="{% url 'set_language' %}" method="POST"> {% csrf_token %} <!-- Не забываем по csrf_token для POST-запросов -->
-        <input type="hidden" name="next" value="{{ redirect_to }}">
+<form action="{% url 'set_language' %}" method="POST"> {% csrf_token %}
+    <!-- Не забываем по csrf_token для POST-запросов -->
+    <input type="hidden" name="next" value="{{ redirect_to }}">
 
-        <select name="language" id="">
-            {% get_available_languages as LANGUAGES %} <!-- получаем языки -->
-            {% get_language_info_list for LANGUAGES as languages %} <!-- Помещаем их в список languages -->
+    <select name="language" id="">
+        {% get_available_languages as LANGUAGES %} <!-- получаем языки -->
+        {% get_language_info_list for LANGUAGES as languages %} <!-- Помещаем их в список languages -->
 
-            {% for language in languages %} <!-- Итерируясь по списку, выводим их название на языке пользователя и код -->
-                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected >{% endif %} >
-                    {{ language.name_local }} - {{ language.code }}
-                </option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="set">
-    </form>
+        {% for language in languages %} <!-- Итерируясь по списку, выводим их название на языке пользователя и код -->
+        <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+            {{ language.name_local }} - {{ language.code }}
+        </option>
 
-    {% get_current_timezone as TIME_ZONE %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        <label for="timezone">Time zone:</label>
-        <select name="timezone">
-            {% for tz in timezones %}
-            <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ tz }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Set">
-    </form>
+        {% endfor %}
+    </select>
+    <input type="submit" value="set">
+</form>
 
-    {{ TIME_ZONE }}
-    {{ current_time|timezone:TIME_ZONE }} <!-- Отображаем время в выбранном часовом поясе  -->
+{% get_current_timezone as TIME_ZONE %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <label for="timezone">Time zone:</label>
+    <select name="timezone">
+        {% for tz in timezones %}
+        <option value="{{ tz }}" {% if tz == TIME_ZONE %}selected{% endif %}>{{ tz }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Set">
+</form>
 
-    {% for model in models %}
-    <div class="model-class">
-        {{ model.name }}
-    </div>
-    {% endfor %}
+{{ TIME_ZONE }}
+{{ current_time|timezone:TIME_ZONE }} <!-- Отображаем время в выбранном часовом поясе  -->
 
-    <!-- Page content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                {% block content %}
-                {% endblock content %}
-            </div>
+{% for model in models %}
+<div class="model-class">
+    {{ model.name }}
+</div>
+{% endfor %}
+
+<!-- Page content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            {% block content %}
+            {% endblock content %}
         </div>
     </div>
+</div>
 </body>
 </html>
