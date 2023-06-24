@@ -52,7 +52,7 @@ python manage.py compilemessages
 
 pip install django-modeltranslation
 
-./manage.py update_translation_fields
+update_translation_fields
 
 brew install gettext
 brew link gettext --force

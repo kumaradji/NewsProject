@@ -35,8 +35,6 @@ def set_timezone(request):
 
 class Index(View):
     def get(self, request):
-        current_time = timezone.now()
-
         # .  Translators: This message appears on the home page only
         models = Post.objects.all()
 
