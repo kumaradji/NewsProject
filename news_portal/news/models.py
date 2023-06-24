@@ -55,9 +55,10 @@ class Category(models.Model):
     name = models.CharField(
         max_length=64,
         unique=True,
-        verbose_name=_('help text for Category model'),
-        help_text=_('This is the help text')
+        verbose_name='Category',
+        help_text='Enter the name of the category (maximum 64 characters).'
     )
+
     subscribers = models.ManyToManyField(
         User,
         blank=True,
@@ -73,8 +74,7 @@ class Category(models.Model):
         return f'{self.name}'
 
     def get_absolute_url(self):
-        return reverse('news_category',
-                       kwargs={'category_id': self.id})
+        return reverse('news_category', kwargs={'category_id': self.id})
 
 
 # Статьи и новости, которые создают пользователи.
@@ -90,21 +90,25 @@ class Post(models.Model):
 
     # связь «один ко многим» с моделью Author
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    categoryType = models.CharField(max_length=2,
-                                    choices=CATEGORY_CHOICES,
-                                    default=ARTICLE)
+    categoryType = models.CharField(
+        max_length=2,
+        choices=CATEGORY_CHOICES,
+        default=ARTICLE
+    )
 
     # автоматически добавляемая дата и время создания
     date = models.DateTimeField(auto_now_add=True)
 
     # связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory)
-    category = models.ManyToManyField(Category,
-                                      through='PostCategory',
-                                      help_text=_('category name'))
+    category = models.ManyToManyField(
+        Category,
+        through='PostCategory',
+        help_text='Select the categories for this post.'
+    )
 
     # заголовок статьи/новости
     title = models.CharField(max_length=255,
-                             verbose_name=gettext_lazy('Заголовок'))
+                             verbose_name=gettext_lazy('title'))
 
     # текст статьи/новости
     text = models.TextField()
@@ -199,12 +203,12 @@ class Subscriber(models.Model):
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
-        related_name='subscriptions',
+        related_name='subscriptions'
     )
     category = models.ForeignKey(
         to=Category,
         on_delete=models.CASCADE,
-        related_name='subscriptions',
+        related_name='subscriptions'
     )
 
     def __str__(self):
