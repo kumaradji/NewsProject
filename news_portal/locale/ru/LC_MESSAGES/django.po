@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-24 19:58+0000\n"
+"POT-Creation-Date: 2023-06-25 06:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,10 +19,58 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-#: news/models.py:112
+
+#: news/models.py:111
 msgid "title"
 msgstr "заголовок"
+
+#: news/templates/category_list.html:7 news/templates/news.html:8
+msgid "НОВОСТИ"
+msgstr "NEWS"  # Впишите перевод
+
+#: news/templates/category_list.html:14
+msgid "All news in the category:"
+msgstr "Все новости в категории:"
+
+#: news/templates/category_list.html:17
+msgid "Subscribe"
+msgstr "Подписаться"
+
+#: news/templates/category_list.html:22 news/templates/news.html:20
+msgid "Write an article or news"
+msgstr "Написать статью или новость"
+
+#: news/templates/category_list.html:30 news/templates/news.html:34
+msgid "year"
+msgstr "года"
+
+#: news/templates/category_list.html:32 news/templates/news.html:36
+msgid "author:"
+msgstr "автор:"
+
+#: news/templates/category_list.html:38 news/templates/news.html:49
+msgid "No news available!"
+msgstr "Новостей нет!"
+
+#: news/templates/news.html:14
+msgid "NEWS on"
+msgstr "НОВОСТИ на"
+
+#: news/templates/news.html:15
+msgid "Total:"
+msgstr "Всего:"
+
+#: news/templates/news.html:26
+msgid "Become an author!"
+msgstr "Стать автором!"
+
+#: news/templates/news.html:37
+msgid "category:"
+msgstr "категории:"
 
 #: templates/index.html:36
 msgid "Check out!"
 msgstr "Зацени перевод!"
+
+#~ msgid "category.name"
+#~ msgstr "Категории"

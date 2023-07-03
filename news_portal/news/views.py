@@ -19,6 +19,7 @@ from .models import *
 from django.urls import reverse_lazy, reverse
 from django.core.cache import cache  # импортируем наш кэш
 from django.views.decorators.http import require_POST
+from django.utils.translation import activate, get_supported_language_variant
 
 
 @require_POST
@@ -37,6 +38,7 @@ class Index(View):
     def get(self, request):
         # .  Translators: This message appears on the home page only
         models = Post.objects.all()
+        current_time = timezone.now()
 
         context = {
             'models': models,

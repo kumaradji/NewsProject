@@ -1,63 +1,58 @@
 {% extends 'default.html' %}
 {% load custom_filters %}
 {% load custom_tags %}
+{% load i18n %}
 
 {% block title %}
-НОВОСТИ
-{% endblock title %}
+    {% trans "НОВОСТИ" %}
+{% endblock %}
 
 {% block content %}
+    <p></p>
+    <p></p>
 
-<p></p>
-<p></p>
+    <p><h3 class="text-normal fs-12">{% trans "Все новости в категории:" %} {{ category.name }} </p></h3>
 
-<p><h3 class="text-normal fs-12">Все новости в категории: {{ category.name }} </p></h3>
+    {% if is_not_subscriber %}
+        <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">{% trans "Подписаться" %}</a></p>
+    {% endif %}
 
-{% if is_not_subscriber %}
-<p class="text-center"><a href="{% url 'subscribe' category.id  %}" class="btn btn-secondary btn-sm">Подписаться</a></p>
-{% endif %}
+    {% if perms.news.add_post %}
+        <p class="text-center">
+            <a href="{% url 'post_create' %}" class="btn-secondary btn-sm">{% trans "Написать статью или новость" %}</a>
+        </p>
+    {% endif %}
 
-{% if perms.news.add_post %}
-<p class="text-center">
-    <a href="{% url 'post_create' %}" class="btn-secondary btn-sm">Написать статью или новость</a>
-</p>
-{% endif %}
+    {% if category_news_list %}
+        <ul class="list-group list-group-flush">
+            {% for c in category_news_list %}
+                <li class="list-group-item">
+                    <h6 align="left"><small class="fw-bold">{{ c.date | date:'d M Y' }} {% trans "года" %}</small></h6>
+                    <h6 align="left"><small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small></h6>
+                    <h6 align="left"><small class="fw-bold">{% trans "автор:" %} {{ c.author }}</small><br></h6>
+                    <p align="left">{{ c.text | truncatechars:410 }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>{% trans "Новостей нет!" %}</h2>
+    {% endif %}
 
-{% if category_news_list %}
+    {% if page_obj.has_previous %}
+        <a href="?{% url_replace page=1 %}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
 
-<ul class="list-group list-group-flush">
-    {% for c in category_news_list %}
-    <li class="list-group-item">
-        <h6 align="left"<small class="fw-bold">{{ c.date | date:'d M Y'}} года</small> </h6>
-        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small>
-        <h6 align="left"<small class="fw-bold">автор: {{ c.author }}</small> <br>
+    {{ page_obj.number }}
 
-        <p align="left">{{ c.text | truncatechars:410 }}</p>
-    </li>
-    {% endfor %}
-</ul>
-
-{% else %}
-<h2>Новостей нет!</h2>
-{% endif %}
-
-{% if page_obj.has_previous %}
-
-<a href="?{% url_replace page=1 %}">1</a>
-{% if page_obj.previous_page_number != 1 %}
-...
-<a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
-{% endif %}
-{% endif %}
-
-{{ page_obj.number }}
-
-{% if page_obj.has_next %}
-<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-{% if paginator.num_pages != page_obj.next_page_number %}
-...
-<a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
-{% endif %}
-{% endif %}
-
-{% endblock content %}
+    {% if page_obj.has_next %}
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}

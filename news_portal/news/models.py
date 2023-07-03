@@ -151,7 +151,10 @@ class Post(models.Model):
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category,
+                                 on_delete=models.CASCADE,
+                                 verbose_name='Category',
+                                 help_text='Enter the name of the category (maximum 64 characters).')
 
     class Meta:
         verbose_name = 'Категория новости'

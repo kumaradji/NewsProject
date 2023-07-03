@@ -2,74 +2,68 @@
 {% load custom_filters %}
 {% load custom_tags %}
 {% load cache %}
+{% load i18n %}
 
-<!--{% cache 300 title %}-->
-    {% block title %}
-    НОВОСТИ
-    {% endblock title %}
-<!--{% endcache %}-->
+{% block title %}
+    {% trans "НОВОСТИ" %}
+{% endblock %}
 
 {% block content %}
+    <p></p>
+    <p></p>
+    <h3 class="text-normal fs-12">{% trans "НОВОСТИ на" %} {% now "Y" %}
+        <p><span class="text-muted fs-8 fw-normal">{% trans "Всего:" %} {{ page_obj.paginator.count }}</span></p>
+    </h3>
 
-<p></p>
-<p></p>
-<h3 class="text-normal fs-12">НОВОСТИ на {% now %}
-    <p><span class="text-muted fs-8 fw-normal">Всего: {{ page_obj.paginator.count }} </span></p></h3>
+    {% if perms.news.add_post %}
+        <p class="text-center">
+            <a href="{% url 'post_create' %}" class="btn-secondary btn-sm">{% trans "Написать статью или новость" %}</a>
+        </p>
+    {% endif %}
 
-{% if perms.news.add_post %}
-<p class="text-center">
-    <a href="{% url 'post_create' %}" class="btn-secondary btn-sm">Написать статью или новость</a>
-</p>
+    {% if not is_author %}
+        <p class="text-center">
+            <a href="{% url 'account_upgrade' %}" class="btn-secondary btn-sm">{% trans "Стать автором!" %}</a>
+        </p>
+    {% endif %}
 
-{% endif %}
-
-{% if not is_author %}
-<p class="text-center">
-    <a href="{% url 'account_upgrade' %}" class="btn-secondary btn-sm">Стать автором!</a>
-</p>
-{% endif %}
-
-{% if news %}
-
-<ul class="list-group list-group-flush">
-    {% for c in news.all %}
-    <li class="list-group-item">
-        <h6 align="left"<small class="fw-bold">{{ c.date | date:'d M Y'}} года</small></h6>
-        <h6 align="left"<small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small></h6>
-        <h6 align="left"<small class="fw-bold">автор: {{ c.author }}</small> <br></h6>
-        <h6 align="left"<small class="text-muted">категории:</small>
-            {% for category in c.category.all %}
-            <a href="{% url 'category_list' category.id %}">
-                {{ category.name }}
-            </a>
+    {% if news %}
+        <ul class="list-group list-group-flush">
+            {% for c in news.all %}
+                <li class="list-group-item">
+                    <h6 align="left"><small class="fw-bold">{{ c.date | date:'d M Y' }} {% trans "года" %}</small></h6>
+                    <h6 align="left"><small class="fw-bold"><a href="{% url 'post' c.id %}">{{ c.title | censor }}</a></small></h6>
+                    <h6 align="left"><small class="fw-bold">{% trans "автор:" %} {{ c.author }}</small><br></h6>
+                    <h6 align="left"><small class="text-muted">{% trans "категории:" %}</small>
+                        {% for category in c.category.all %}
+                            <a href="{% url 'category_list' category.id %}">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </h6>
+                    <h6 align="left"><small class="fw-bold">{{ c.text | truncatechars:210 }}</small></h6>
+                </li>
             {% endfor %}
+        </ul>
+    {% else %}
+        <h2>{% trans "Новостей нет!" %}</h2>
+    {% endif %}
 
+    {% if page_obj.has_previous %}
+        <a href="?{% url_replace page=1 %}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
 
-        <h6 align="left"<small class="fw-bold">{{ c.text | truncatechars:210 }}</p>
-    </li>
-    {% endfor %}
-</ul>
+    {{ page_obj.number }}
 
-{% else %}
-<h2>Новостей нет!</h2>
-{% endif %}
-
-{% if page_obj.has_previous %}
-<a href="?{% url_replace page=1 %}">1</a>
-{% if page_obj.previous_page_number != 1 %}
-...
-<a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
-{% endif %}
-{% endif %}
-
-{{ page_obj.number }}
-
-{% if page_obj.has_next %}
-<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-{% if paginator.num_pages != page_obj.next_page_number %}
-...
-<a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
-{% endif %}
-{% endif %}
-
-{% endblock content %}
+    {% if page_obj.has_next %}
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}

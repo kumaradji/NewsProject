@@ -17,7 +17,6 @@
     <style>
         body {background-color: {% if current_time.hour >= 19 or current_time.hour <= 7 %} darkcyan {% else %} powderblue {% endif %};}
     </style>
-
 </head>
 <body>
 <!-- Responsive navbar -->
@@ -53,6 +52,25 @@
         </div>
     </div>
 </nav>
+<!-- Кнопка для переключения языка -->
+<form action="{% url 'set_language' %}" method="POST">
+    {% csrf_token %}
+    <!-- Поле для перенаправления пользователя после переключения языка -->
+    <input type="hidden" name="next" value="{{ redirect_to }}">
+
+    <select name="language" id="">
+        {% get_available_languages as LANGUAGES %} <!-- Получаем список доступных языков -->
+        {% get_language_info_list for LANGUAGES as languages %} <!-- Помещаем их в список languages -->
+
+        {% for language in languages %} <!-- Итерируемся по списку и выводим языки -->
+        <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected {% endif %}>
+            {{ language.name_local }} - {{ language.code }}
+        </option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Set">
+</form>
+
 <!-- Page content -->
 <div class="container">
     <div class="row">
